@@ -23,10 +23,14 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <div className="flex items-center gap-3">
-            <div className="flex-shrink-0">
-              <h1 className="text-2xl sm:text-3xl font-display font-bold text-primary italic leading-none">
-                Canvas
-              </h1>
+          <div className="flex-shrink-0">
+              <div className="flex items-baseline gap-2">
+                <h1 className="text-2xl sm:text-3xl font-display font-bold text-primary italic leading-none">
+                  Canvas
+                </h1>
+                <span className="text-muted-foreground/50 font-body text-sm hidden sm:inline">by</span>
+                <span className="text-sm sm:text-base font-body font-semibold text-foreground/70 tracking-wide hidden sm:inline">Aryans Art</span>
+              </div>
               <p className="text-[10px] sm:text-xs tracking-[0.2em] text-muted-foreground font-body uppercase">
                 Crafting memories with precision
               </p>

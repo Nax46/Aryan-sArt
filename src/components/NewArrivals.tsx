@@ -33,7 +33,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div 
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => { window.scrollTo({ top: 0, behavior: 'instant' }); navigate(`/product/${product.id}`); }}
       className="group relative bg-card/50 border border-border hover:shadow-lg transition-all duration-300 rounded-sm p-3 cursor-pointer"
     >
       {/* Image placeholder */}

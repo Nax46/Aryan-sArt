@@ -6,8 +6,9 @@ const Footer = () => (
       <div className="grid md:grid-cols-5 gap-10 mb-12">
         {/* Brand */}
         <div className="md:col-span-2">
-          <h2 className="text-3xl font-display font-bold italic text-parchment mb-1">Canvas</h2>
-          <p className="text-xs tracking-[0.2em] uppercase text-sand/60 font-body mb-4">Crafted Spaces</p>
+          <h2 className="text-3xl font-display font-bold italic text-parchment mb-0.5">Canvas</h2>
+          <p className="text-sm font-body font-semibold text-sand/60 mb-1">by Aryans Art</p>
+          <p className="text-xs tracking-[0.2em] uppercase text-sand/40 font-body mb-4">Crafted Spaces</p>
           <p className="font-body text-sm text-sand/50 leading-relaxed max-w-xs mb-4">
             Precision CNC & laser-cut temples and customized interior decor items like lamps. Crafted in Bundi, Rajasthan. Delivered across India.
           </p>

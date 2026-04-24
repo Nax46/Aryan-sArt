@@ -19,7 +19,15 @@ mongoose.connect(MONGO_URI)
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://oncanvas.in',
+    'https://www.oncanvas.in'
+  ],
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' })); // Increased limit for base64 image uploads
 
 app.use('/api/products', productsRouter);
@@ -32,6 +40,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(Number(port), '0.0.0.0', () => {
+  console.log(`Server running on port ${port} (all interfaces)`);
 });

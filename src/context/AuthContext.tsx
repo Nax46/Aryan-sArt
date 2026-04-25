@@ -93,7 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         result = JSON.parse(text);
       } catch (e) {
-        throw new Error(`Server Error (${res.status}): API endpoint not found. Backend might be down or URL is incorrect.`);
+        let snippet = text.substring(0, 150).replace(/<[^>]+>/g, '');
+        throw new Error(`Server Error (${res.status}): ${snippet}`);
       }
       
       if (!result.success) {
@@ -129,7 +130,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         result = JSON.parse(text);
       } catch (e) {
-        throw new Error(`Server Error (${res.status}): API endpoint not found. Backend might be down or URL is incorrect.`);
+        let snippet = text.substring(0, 150).replace(/<[^>]+>/g, '');
+        throw new Error(`Server Error (${res.status}): ${snippet}`);
       }
 
       if (!result.success) {

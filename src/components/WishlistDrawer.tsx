@@ -42,7 +42,11 @@ const WishlistDrawer = () => {
                     <p className="font-body text-sm text-primary mt-0.5">₹{item.price.toLocaleString("en-IN")}</p>
                     <button 
                       onClick={() => {
-                        addToCart({ ...item, qty: 1 });
+                        addToCart({ 
+                          id: Number(item.id), 
+                          name: item.name, 
+                          price: item.price 
+                        });
                         removeItem(item.id);
                         setIsOpen(false);
                         setCartOpen(true);

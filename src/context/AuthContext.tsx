@@ -54,7 +54,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               'Content-Type': 'application/json'
             }
           });
-          const result = await res.json();
+          
+          if (!res.ok) {
+            throw new Error(`Server returned ${res.status}`);
+          }
+          
+          const text = await res.text();
+          const result = text ? JSON.parse(text) : {};
           
           if (result.success) {
             setUser(result.data);
@@ -81,7 +87,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobileNumber, password })
       });
-      const result = await res.json();
+      
+      const text = await res.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Server Error (${res.status}): API endpoint not found. Backend might be down or URL is incorrect.`);
+      }
       
       if (!result.success) {
         throw new Error(result.message || 'Login failed');
@@ -110,7 +123,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, mobileNumber, password, email })
       });
-      const result = await res.json();
+      
+      const text = await res.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Server Error (${res.status}): API endpoint not found. Backend might be down or URL is incorrect.`);
+      }
 
       if (!result.success) {
         throw new Error(result.message || 'Signup failed');

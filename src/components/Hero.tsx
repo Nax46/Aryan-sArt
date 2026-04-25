@@ -15,7 +15,7 @@ const Hero = () => (
       <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-light leading-[1.1] text-white mb-6 animate-fade-up">
         Hand-crafted CNC Temples
         <br />
-        <span className="italic text-primary font-medium">&amp;</span> Wooden Interiors
+        <span className="italic text-primary font-medium">&</span> Wooden Interiors
       </h2>
       <p className="text-base sm:text-lg text-white/90 font-body max-w-xl mx-auto mb-10 leading-relaxed animate-fade-up" style={{ animationDelay: '0.2s' }}>
         Made in Bundi, Rajasthan. Everyday objects crafted through traditional artistry and modern precision machinery to breathe life into your spaces.
@@ -23,17 +23,16 @@ const Hero = () => (
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: '0.4s' }}>
         <a
           href="#arrivals"
-          className="px-8 py-3 bg-primary text-primary-foreground font-body text-sm tracking-wider uppercase hover:bg-primary/90 transition-transform hover:scale-105 active:scale-95 duration-300"
+          className="px-8 py-3 bg-[#8B4513] text-white font-body text-sm tracking-wider uppercase rounded-lg hover:bg-[#8B4513]/90 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 duration-300"
         >
           Explore Collection
         </a>
         <a
           href="#custom-order"
-          className="px-8 py-3 bg-secondary text-secondary-foreground font-body text-sm tracking-wider uppercase hover:bg-secondary/90 transition-transform hover:scale-105 active:scale-95 duration-300 border border-secondary"
+          className="px-8 py-3 bg-white/10 text-white font-body text-sm tracking-wider uppercase rounded-lg border border-white/60 hover:bg-white/20 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 duration-300 backdrop-blur-sm"
         >
           Custom Order
         </a>
-
       </div>
     </div>
   </section>

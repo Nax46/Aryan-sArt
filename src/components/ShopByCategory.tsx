@@ -1,9 +1,21 @@
 import { useScrollFadeIn } from "@/hooks/useScrollFadeIn";
 
 const categories = [
-  { name: "Lamps", subtitle: "Warm light, sculpted form", gradient: "from-[hsl(36,30%,72%)] to-[hsl(37,40%,60%)]" },
-  { name: "Planters", subtitle: "Green meets geometry", gradient: "from-[hsl(105,21%,45%)] to-[hsl(105,25%,35%)]" },
-  { name: "Decor & Objects", subtitle: "Details that define spaces", gradient: "from-[hsl(14,40%,55%)] to-[hsl(0,40%,40%)]" },
+  { 
+    name: "Lamps", 
+    subtitle: "Warm light, sculpted form", 
+    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=800&auto=format&fit=crop" 
+  },
+  { 
+    name: "Painting", 
+    subtitle: "Art that speaks", 
+    image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=800&auto=format&fit=crop" 
+  },
+  { 
+    name: "Decor & Objects", 
+    subtitle: "Details that define spaces", 
+    image: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?q=80&w=800&auto=format&fit=crop" 
+  },
 ];
 
 const ShopByCategory = () => {
@@ -22,14 +34,24 @@ const ShopByCategory = () => {
           {categories.map((cat) => (
             <div
               key={cat.name}
-              className={`relative aspect-[4/3] rounded-sm bg-gradient-to-br ${cat.gradient} flex flex-col justify-end p-6 sm:p-8 cursor-pointer group overflow-hidden`}
+              className="relative aspect-[4/3] rounded-sm flex flex-col justify-end p-6 sm:p-8 cursor-pointer group overflow-hidden"
             >
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-500" />
-              <div className="relative">
-                <h3 className="text-2xl sm:text-3xl font-display font-medium text-parchment">
+              {/* Background Image */}
+              <img 
+                src={cat.image} 
+                alt={cat.name} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-500" />
+              
+              {/* Content */}
+              <div className="relative z-10">
+                <h3 className="text-2xl sm:text-3xl font-display font-medium text-white">
                   {cat.name}
                 </h3>
-                <p className="font-body text-sm text-parchment/80 mt-1">{cat.subtitle}</p>
+                <p className="font-body text-sm text-white/80 mt-1">{cat.subtitle}</p>
               </div>
             </div>
           ))}

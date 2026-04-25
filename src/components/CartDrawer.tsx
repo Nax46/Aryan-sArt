@@ -21,33 +21,80 @@ const CartDrawer = () => {
       return;
     }
 
-    const options = {
-      key: 'rzp_test_dummykey12345', // Dummy key for testing UI
-      amount: total * 100,
-      currency: 'INR',
-      name: 'Canvas',
-      description: 'Purchase from Canvas',
-      image: '/logo-remove.png',
-      handler: function(response: any) {
-        toast.success(`Payment successful! ID: ${response.razorpay_payment_id}`);
-        // Here you would clear cart and save order to DB
-        setIsOpen(false);
-      },
-      prefill: {
-        name: user.user_metadata?.full_name || 'Guest User',
-        email: user.email || 'guest@example.com',
-        contact: '9999999999'
-      },
-      theme: {
-        color: '#4a2511' // primary color approx
-      }
-    };
+    try {
+      // Create order on backend
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const token = localStorage.getItem('canvas_token');
+      
+      const orderResponse = await fetch(`${API_URL}/payment/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          amount: total * 100,
+          currency: 'INR'
+        })
+      });
 
-    const rzp1 = new (window as any).Razorpay(options);
-    rzp1.on('payment.failed', function (response: any){
-      toast.error(response.error.description);
-    });
-    rzp1.open();
+      const orderData = await orderResponse.json();
+      if (!orderResponse.ok) throw new Error(orderData.error || 'Failed to create order');
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ShhaN6FBWROkMh',
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Canvas',
+        description: 'Purchase from Canvas',
+        image: '/logo-remove.png',
+        order_id: orderData.order_id,
+        handler: async function(response: any) {
+          try {
+            // Verify payment on backend
+            const verifyResponse = await fetch(`${API_URL}/payment/verify-payment`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+
+            const verifyData = await verifyResponse.json();
+            if (verifyResponse.ok && verifyData.success) {
+              toast.success(`Payment verified successfully! ID: ${response.razorpay_payment_id}`);
+              // Clear cart (we can't easily clear all items at once in context, but let's try)
+              setIsOpen(false);
+            } else {
+              toast.error(verifyData.error || 'Payment verification failed');
+            }
+          } catch (err) {
+            toast.error('Payment verification error');
+          }
+        },
+        prefill: {
+          name: user.name || 'Guest User',
+          email: user.email || 'guest@example.com',
+          contact: user.mobileNumber || '9999999999'
+        },
+        theme: {
+          color: '#4a2511'
+        }
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.on('payment.failed', function (response: any){
+        toast.error(response.error.description);
+      });
+      rzp1.open();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   if (!isOpen) return null;

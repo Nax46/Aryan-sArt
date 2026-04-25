@@ -7,6 +7,7 @@ import cartRouter from './routes/cart';
 import ordersRouter from './routes/orders';
 import customOrdersRouter from './routes/custom_orders';
 import authRouter from './routes/auth';
+import paymentRouter from './routes/payment';
 
 dotenv.config();
 
@@ -53,6 +54,7 @@ app.use('/api/cart', cartRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/custom-orders', customOrdersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/payment', paymentRouter);
 
 // Start server only if not in Vercel (or production serverless)
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {

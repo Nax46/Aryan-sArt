@@ -1,17 +1,27 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { toast } from "sonner"; // They use sonner as per package.json
+import { toast } from "sonner";
 
 export interface User {
   id: string;
-  email: string;
-  user_metadata?: { full_name?: string };
+  name: string;
+  mobileNumber: string;
+  email?: string;
+  role: string;
+  profile?: {
+    avatar?: string;
+    address?: string;
+    city?: string;
+    pincode?: string;
+  };
 }
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, name: string) => Promise<void>;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (mobileNumber: string, password: string) => Promise<void>;
+  signup: (name: string, mobileNumber: string, password: string, email?: string) => Promise<void>;
   logout: () => void;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
@@ -30,79 +40,116 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("canvas_user");
-    const storedToken = localStorage.getItem("canvas_token");
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-    }
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem("canvas_token");
+      if (storedToken) {
+        try {
+          const res = await fetch(`${API_URL}/auth/me`, {
+            headers: { 
+              'Authorization': `Bearer ${storedToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const result = await res.json();
+          
+          if (result.success) {
+            setUser(result.data);
+            setToken(storedToken);
+          } else {
+            localStorage.removeItem("canvas_token");
+          }
+        } catch (error) {
+          console.error("Session restoration failed:", error);
+          localStorage.removeItem("canvas_token");
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (mobileNumber: string, password: string) => {
+    setIsLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ mobileNumber, password })
       });
-      const data = await res.json();
+      const result = await res.json();
       
-      if (!res.ok) {
-        throw new Error(data.error || 'Login failed');
+      if (!result.success) {
+        throw new Error(result.message || 'Login failed');
       }
 
-      setUser(data.user);
-      setToken(data.session.access_token);
-      localStorage.setItem("canvas_user", JSON.stringify(data.user));
-      localStorage.setItem("canvas_token", data.session.access_token);
+      const { user, token } = result.data;
+      setUser(user);
+      setToken(token);
+      localStorage.setItem("canvas_token", token);
       
       setIsAuthModalOpen(false);
       toast.success("Logged in successfully!");
     } catch (error: any) {
       toast.error(error.message);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const signup = async (email: string, password: string, name: string) => {
+  const signup = async (name: string, mobileNumber: string, password: string, email?: string) => {
+    setIsLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name })
+        body: JSON.stringify({ name, mobileNumber, password, email })
       });
-      const data = await res.json();
+      const result = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Signup failed');
+      if (!result.success) {
+        throw new Error(result.message || 'Signup failed');
       }
 
-      setUser(data.user);
-      setToken(data.session.access_token);
-      localStorage.setItem("canvas_user", JSON.stringify(data.user));
-      localStorage.setItem("canvas_token", data.session.access_token);
+      const { user, token } = result.data;
+      setUser(user);
+      setToken(token);
+      localStorage.setItem("canvas_token", token);
       
       setIsAuthModalOpen(false);
-      toast.success("Profile created successfully!");
+      toast.success("Account created successfully!");
     } catch (error: any) {
       toast.error(error.message);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("canvas_user");
     localStorage.removeItem("canvas_token");
-    toast.success("Logged out");
+    toast.success("Logged out successfully");
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, signup, logout, isAuthModalOpen, setIsAuthModalOpen }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      isLoading, 
+      isAuthenticated: !!user,
+      login, 
+      signup, 
+      logout, 
+      isAuthModalOpen, 
+      setIsAuthModalOpen 
+    }}>
       {children}
     </AuthContext.Provider>
   );

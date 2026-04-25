@@ -5,6 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'canvas_aryan_art_secret_2024_secur
 
 export interface AuthRequest extends Request {
   user?: any;
+  headers: any;
 }
 
 export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {

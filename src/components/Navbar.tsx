@@ -35,7 +35,7 @@ const Navbar = () => {
                   <span className="text-[#8B4513]/40 font-body text-sm hidden sm:inline">by</span>
                   <span className="text-sm sm:text-base font-body font-semibold text-[#8B4513]/70 tracking-wide hidden sm:inline">Aryans Art</span>
                 </div>
-                <p className="text-[10px] sm:text-xs tracking-[0.2em] text-[#8B4513]/50 font-body uppercase">
+                <p className="hidden sm:block text-[10px] sm:text-xs tracking-[0.2em] text-[#8B4513]/50 font-body uppercase">
                   Crafting memories with precision
                 </p>
               </div>

@@ -54,8 +54,7 @@ app.use('/api/custom-orders', customOrdersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/payment', paymentRouter);
 
-// Start server
-app.listen(Number(PORT), '0.0.0.0', () => {
+const server = app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 

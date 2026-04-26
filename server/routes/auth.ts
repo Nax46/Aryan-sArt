@@ -8,6 +8,9 @@ const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'canvas_aryan_art_secret_2024_secure';
 
 const generateToken = (userId: any) => {
+  if (!JWT_SECRET) {
+    console.error('JWT_SECRET is missing!');
+  }
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
 };
 
@@ -64,7 +67,10 @@ router.post('/signup', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('Signup Error:', error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ 
+      success: false, 
+      message: error.message || "Internal server error" 
+    });
   }
 });
 
@@ -106,7 +112,10 @@ router.post('/login', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('Login Error:', error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ 
+      success: false, 
+      message: error.message || "Internal server error" 
+    });
   }
 });
 

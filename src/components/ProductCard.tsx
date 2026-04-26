@@ -3,6 +3,8 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { Product } from "@/lib/data";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 interface ProductCardProps {
   product: Product;
@@ -11,77 +13,122 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem: addToCart, setIsOpen: setCartOpen } = useCart();
   const { isInWishlist, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlist();
+  const { user, setIsAuthModalOpen } = useAuth();
   const isWished = isInWishlist(product.id.toString());
   const navigate = useNavigate();
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     if (isWished) {
       removeFromWishlist(product.id.toString());
     } else {
-      addToWishlist({ id: product.id.toString(), name: product.name, price: product.price, image: product.image });
+      addToWishlist({ 
+        id: product.id.toString(), 
+        name: product.name, 
+        price: product.price, 
+        image: product.image 
+      });
     }
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart({ id: product.id.toString(), name: product.name, price: product.price });
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    addToCart({ 
+      id: product.id, 
+      name: product.name, 
+      price: product.price,
+      image: product.image
+    });
+    toast.success("Added to cart");
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart({ id: product.id.toString(), name: product.name, price: product.price });
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    addToCart({ 
+      id: product.id, 
+      name: product.name, 
+      price: product.price,
+      image: product.image
+    });
     setCartOpen(true);
+  };
+
+  const handleNavigateToDetail = () => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    navigate(`/product/${product.id}`);
   };
 
   return (
     <div 
-      onClick={() => { window.scrollTo({ top: 0, behavior: 'instant' }); navigate(`/product/${product.id}`); }}
-      className="group relative bg-card/50 border border-border hover:shadow-lg transition-all duration-300 rounded-sm p-3 cursor-pointer h-full flex flex-col"
+      onClick={handleNavigateToDetail}
+      className="group relative bg-white border border-border/40 hover:shadow-xl transition-all duration-500 rounded-sm p-3 cursor-pointer h-full flex flex-col"
     >
-      <div className="relative aspect-[3/4] overflow-hidden mb-3">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-sm mb-4 bg-[#F9F7F5]">
         {product.image ? (
-          <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <img 
+            src={product.image} 
+            alt={product.name} 
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+          />
         ) : (
-          <div className="absolute inset-0 bg-muted flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full" style={{ backgroundColor: product.color, opacity: 0.5 }} />
+          <div className="absolute inset-0 flex items-center justify-center opacity-20" style={{ backgroundColor: product.color }}>
+            <div className="w-20 h-20 rounded-full blur-2xl" style={{ backgroundColor: product.color }} />
           </div>
         )}
+        
         <button
           onClick={handleWishlistClick}
-          className="absolute top-2 right-2 p-1.5 bg-background/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-background transition-colors z-10"
+          className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all z-10"
         >
           <Heart
-            className={`w-4 h-4 transition-colors ${isWished ? "fill-primary text-primary" : "text-muted-foreground hover:text-primary"}`}
+            className={`w-4 h-4 transition-colors ${isWished ? "fill-primary text-primary" : "text-muted-foreground"}`}
           />
         </button>
       </div>
-      <p className="text-[11px] text-muted-foreground font-body uppercase tracking-wider mb-1 truncate">
-        {product.category}
-      </p>
-      <h3 className="font-body text-sm font-medium text-foreground truncate mb-1 group-hover:text-primary transition-colors">
-        {product.name}
-      </h3>
-      <div className="flex items-center gap-2 mb-3">
-        <p className="font-body text-base font-semibold text-foreground">
-          ₹{product.price.toLocaleString("en-IN")}
+
+      <div className="flex-1 flex flex-col px-1">
+        <p className="text-[10px] text-muted-foreground font-body uppercase tracking-[0.2em] mb-1">
+          {product.category}
         </p>
-      </div>
-      
-      <div className="flex flex-col sm:flex-row gap-2 mt-auto relative z-10">
-        <button
-          onClick={handleAddToCart}
-          className="flex-1 py-2 bg-primary/10 text-primary border border-primary text-xs font-medium uppercase rounded-sm shadow-sm hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-1.5 font-display"
-        >
-          <ShoppingBag className="w-3.5 h-3.5" />
-          Add
-        </button>
-        <button
-          onClick={handleBuyNow}
-          className="flex-1 py-2 bg-secondary text-secondary-foreground text-xs font-medium uppercase rounded-sm shadow-sm hover:bg-secondary/90 transition-all flex items-center justify-center font-display"
-        >
-          Buy Now
-        </button>
+        <h3 className="font-body text-sm font-medium text-foreground leading-tight mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
+          {product.name}
+        </h3>
+        
+        <div className="mt-auto">
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-body text-base font-semibold text-foreground">
+              ₹{product.price.toLocaleString("en-IN")}
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-2">
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 py-2 bg-primary/10 text-primary border border-primary text-[10px] font-bold uppercase tracking-wider rounded-sm hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-1.5 font-display"
+            >
+              <ShoppingBag className="w-3 h-3" />
+              Add
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 py-2 bg-secondary text-secondary-foreground text-[10px] font-bold uppercase tracking-wider rounded-sm hover:bg-secondary/90 transition-all font-display"
+            >
+              Buy Now
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

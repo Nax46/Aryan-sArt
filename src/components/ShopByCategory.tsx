@@ -1,25 +1,30 @@
 import { useScrollFadeIn } from "@/hooks/useScrollFadeIn";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   { 
     name: "Lamps", 
     subtitle: "Warm light, sculpted form", 
-    image: "/lamps.jfif" 
+    image: "/lamps.jfif",
+    id: "lamps"
   },
   { 
     name: "Painting", 
     subtitle: "Art that speaks", 
-    image: "/painting.jfif" 
+    image: "/painting.jfif",
+    id: "painting"
   },
   { 
     name: "Decor & Objects", 
     subtitle: "Details that define spaces", 
-    image: "/disign.jfif" 
+    image: "/disign.jfif",
+    id: "decor"
   },
 ];
 
 const ShopByCategory = () => {
   const ref = useScrollFadeIn();
+  const navigate = useNavigate();
 
   return (
     <section className="py-16 sm:py-24 px-4" ref={ref}>
@@ -34,6 +39,7 @@ const ShopByCategory = () => {
           {categories.map((cat) => (
             <div
               key={cat.name}
+              onClick={() => navigate(`/category/${cat.id}`)}
               className="relative aspect-[4/3] rounded-sm flex flex-col justify-end p-6 sm:p-8 cursor-pointer group overflow-hidden"
             >
               {/* Background Image */}
@@ -62,3 +68,4 @@ const ShopByCategory = () => {
 };
 
 export default ShopByCategory;
+

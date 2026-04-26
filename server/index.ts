@@ -9,15 +9,13 @@ import customOrdersRouter from './routes/custom_orders';
 import authRouter from './routes/auth';
 import paymentRouter from './routes/payment';
 
-dotenv.config();
+import connectDB from './lib/db';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://anshuljangidindian_db_user:2SJZ4SIptp7FKucb@cluster01.dejvuao.mongodb.net/?appName=Cluster01';
+dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('MongoDB connection error:', err));
+connectDB();
 
 const app = express();
 

@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { verifyToken, AuthRequest } from '../middleware/authMiddleware';
+import connectDB from '../lib/db';
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'canvas_aryan_art_secret_2024_secure';
@@ -13,12 +14,16 @@ const generateToken = (userId: any) => {
 // @route POST /api/auth/signup
 router.post('/signup', async (req: Request, res: Response) => {
   try {
-    const { name, mobileNumber, password, email } = req.body;
+    await connectDB();
+    let { name, mobileNumber, password, email } = req.body;
 
     // Validation
     if (!name || !mobileNumber || !password) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
+
+    mobileNumber = mobileNumber.trim();
+    password = password.trim();
 
     if (!/^[6-9]\d{9}$/.test(mobileNumber)) {
       return res.status(400).json({ success: false, message: "Please provide a valid 10-digit Indian mobile number" });
@@ -66,11 +71,15 @@ router.post('/signup', async (req: Request, res: Response) => {
 // @route POST /api/auth/login
 router.post('/login', async (req: Request, res: Response) => {
   try {
-    const { mobileNumber, password } = req.body;
+    await connectDB();
+    let { mobileNumber, password } = req.body;
 
     if (!mobileNumber || !password) {
       return res.status(400).json({ success: false, message: "Please provide mobile number and password" });
     }
+
+    mobileNumber = mobileNumber.trim();
+    password = password.trim();
 
     const user = await User.findOne({ mobileNumber });
     if (!user) {

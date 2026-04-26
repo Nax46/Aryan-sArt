@@ -8,6 +8,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import Index from "./pages/Index";
 import ProductPage from "./pages/Product";
+import CategoryPage from "./pages/CategoryPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/product/:id" element={<ProductPage />} />
+                <Route path="/category/:id" element={<CategoryPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

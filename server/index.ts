@@ -54,11 +54,9 @@ app.use('/api/custom-orders', customOrdersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/payment', paymentRouter);
 
-// Start server only if not in Vercel (or production serverless)
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
-  app.listen(Number(PORT), '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT} (all interfaces)`);
-  });
-}
+// Start server
+app.listen(Number(PORT), '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 export default app;

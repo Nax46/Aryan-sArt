@@ -11,7 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { products } from "@/lib/data";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { count, setIsOpen } = useCart();
@@ -19,6 +21,25 @@ const Navbar = () => {
   const { items: wishlistItems, setIsOpen: setWishlistOpen } = useWishlist();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  // Search logic
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    return products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query)
+    ).slice(0, 5); // Limit to top 5 results
+  }, [searchQuery]);
+
+  const handleSearchSelect = (productId: number) => {
+    setSearchQuery("");
+    setSearchOpen(false);
+    navigate(`/product/${productId}`);
+  };
 
   return (
     <>
@@ -27,7 +48,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate("/")}>
                 <div className="flex items-baseline gap-2">
                   <h1 className="text-2xl sm:text-3xl font-display font-bold text-[#8B4513] italic leading-none">
                     Canvas
@@ -47,14 +68,46 @@ const Navbar = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B4513]/40" />
                 <input
                   type="text"
-                  placeholder="Search for lamps, planters..."
+                  placeholder="Search for lamps, paintings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchOpen(true)}
                   onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
                   className="w-full pl-10 pr-4 py-2 border border-[#8B4513]/20 rounded-lg bg-transparent text-sm font-body placeholder:text-[#8B4513]/30 focus:outline-none focus:ring-1 focus:ring-[#8B4513]/30"
                 />
-                {searchOpen && (
-                  <div className="absolute top-full left-0 w-full mt-1 bg-white border border-[#8B4513]/10 rounded-lg shadow-lg p-4 z-50">
-                    <p className="text-sm text-[#8B4513]/50">Type to search items...</p>
+                {searchOpen && searchQuery.trim() !== "" && (
+                  <div className="absolute top-full left-0 w-full mt-1 bg-white border border-[#8B4513]/10 rounded-lg shadow-xl p-2 z-50 overflow-hidden">
+                    {searchResults.length > 0 ? (
+                      <div className="flex flex-col">
+                        {searchResults.map((product) => (
+                          <div
+                            key={product.id}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              handleSearchSelect(product.id);
+                            }}
+                            className="flex items-center gap-3 p-2 hover:bg-[#8B4513]/5 rounded-md cursor-pointer transition-colors"
+                          >
+                            <div className="w-10 h-10 rounded bg-[#F9F7F5] overflow-hidden flex-shrink-0">
+                              {product.image ? (
+                                <img src={product.image} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full" style={{ backgroundColor: product.color, opacity: 0.3 }} />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-[#4A2511] truncate">{product.name}</p>
+                              <p className="text-[10px] text-[#8B4513]/50 uppercase tracking-widest">{product.category}</p>
+                            </div>
+                            <p className="text-xs font-semibold text-[#8B4513]">₹{product.price}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-4 text-center">
+                        <p className="text-sm text-[#8B4513]/50 italic">No products found for "{searchQuery}"</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -159,25 +212,57 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search for lamps, paintings..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setSearchOpen(true)}
+                onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
                 className="w-full pl-10 pr-4 py-2 border border-[#8B4513]/20 rounded-lg bg-transparent text-sm font-body placeholder:text-[#8B4513]/30 focus:outline-none focus:ring-1 focus:ring-[#8B4513]/30"
               />
+              {searchOpen && searchQuery.trim() !== "" && (
+                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-[#8B4513]/10 rounded-lg shadow-xl p-2 z-50 max-h-[60vh] overflow-y-auto">
+                  {searchResults.length > 0 ? (
+                    <div className="flex flex-col">
+                      {searchResults.map((product) => (
+                        <div
+                          key={product.id}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSearchSelect(product.id);
+                          }}
+                          className="flex items-center gap-3 p-3 hover:bg-[#8B4513]/5 rounded-md cursor-pointer transition-colors"
+                        >
+                          <div className="w-12 h-12 rounded bg-[#F9F7F5] overflow-hidden flex-shrink-0">
+                            {product.image ? (
+                              <img src={product.image} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full" style={{ backgroundColor: product.color, opacity: 0.3 }} />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-[#4A2511] truncate">{product.name}</p>
+                            <p className="text-[10px] text-[#8B4513]/50 uppercase tracking-widest">{product.category}</p>
+                          </div>
+                          <p className="text-xs font-semibold text-[#8B4513]">₹{product.price}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center">
+                      <p className="text-sm text-[#8B4513]/50 italic">No results found</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Mobile Nav Links */}
             <div className="flex flex-col gap-1 font-body">
               <a
-                href="#arrivals"
+                href="/"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 text-[#8B4513] font-medium rounded-lg hover:bg-[#8B4513]/5 transition-colors"
               >
-                <ShoppingBag className="w-4 h-4" /> Shop Collection
-              </a>
-              <a
-                href="#custom-order"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 text-[#8B4513] font-medium rounded-lg hover:bg-[#8B4513]/5 transition-colors"
-              >
-                <Package className="w-4 h-4" /> Custom Order
+                <ShoppingBag className="w-4 h-4" /> Home
               </a>
               <button
                 onClick={() => { setWishlistOpen(true); setMobileMenuOpen(false); }}

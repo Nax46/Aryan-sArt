@@ -4,17 +4,17 @@ const categories = [
   { 
     name: "Lamps", 
     subtitle: "Warm light, sculpted form", 
-    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=800&auto=format&fit=crop" 
+    image: "/temples/3.jpeg" 
   },
   { 
     name: "Painting", 
     subtitle: "Art that speaks", 
-    image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=800&auto=format&fit=crop" 
+    image: "/temples/5.jpeg" 
   },
   { 
     name: "Decor & Objects", 
     subtitle: "Details that define spaces", 
-    image: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?q=80&w=800&auto=format&fit=crop" 
+    image: "/temples/6.jpeg" 
   },
 ];
 

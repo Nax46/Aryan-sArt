@@ -69,7 +69,7 @@ export const products: Product[] = [
     price: 17500, 
     category: "Temples", 
     color: "hsl(36, 25%, 65%)", 
-    image: "/download.jfif",
+    image: "/temples/1.jpeg",
     description: "Compact and beautiful wall mounted mandir ideal for apartments."
   },
   { 
@@ -78,7 +78,7 @@ export const products: Product[] = [
     price: 22500, 
     category: "Temples", 
     color: "hsl(14, 50%, 50%)", 
-    image: "/modern temple Design.jfif",
+    image: "/temples/2.jpeg",
     description: "Premium designer shrine with custom CNC patterns and rich finish."
   },
 ];

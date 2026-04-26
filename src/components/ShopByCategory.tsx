@@ -4,17 +4,17 @@ const categories = [
   { 
     name: "Lamps", 
     subtitle: "Warm light, sculpted form", 
-    image: "/temples/3.jpeg" 
+    image: "/lamps.jfif" 
   },
   { 
     name: "Painting", 
     subtitle: "Art that speaks", 
-    image: "/temples/5.jpeg" 
+    image: "/painting.jfif" 
   },
   { 
     name: "Decor & Objects", 
     subtitle: "Details that define spaces", 
-    image: "/temples/6.jpeg" 
+    image: "/disign.jfif" 
   },
 ];
 

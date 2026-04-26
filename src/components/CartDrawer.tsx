@@ -1,41 +1,63 @@
-import { X, Minus, Plus, ShoppingBag } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Truck, CreditCard } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { useState } from "react";
+
+const getApiUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (window.location.hostname === 'localhost') return 'http://localhost:5000/api';
+  return '/api';
+};
+
+const loadScript = (src: string) => new Promise((resolve) => {
+  if (document.querySelector(`script[src="${src}"]`)) { resolve(true); return; }
+  const script = document.createElement('script');
+  script.src = src;
+  script.onload = () => resolve(true);
+  script.onerror = () => resolve(false);
+  document.body.appendChild(script);
+});
 
 const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQty, total } = useCart();
   const { user, setIsAuthModalOpen } = useAuth();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleCheckout = async () => {
+  const handleCheckoutClick = () => {
     if (!user) {
       toast.error("Please login to proceed with checkout");
       setIsOpen(false);
       setIsAuthModalOpen(true);
       return;
     }
+    setShowPaymentModal(true);
+  };
 
-    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-    if (!res) {
-      toast.error('Razorpay SDK failed to load');
+  const handleCOD = () => {
+    toast.success("🎉 Order placed! Cash on Delivery selected. We'll contact you soon.");
+    setShowPaymentModal(false);
+    setIsOpen(false);
+  };
+
+  const handleOnlinePayment = async () => {
+    setIsProcessing(true);
+    const loaded = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+    if (!loaded) {
+      toast.error('Razorpay SDK failed to load. Check your internet connection.');
+      setIsProcessing(false);
       return;
     }
 
     try {
-      // Create order on backend
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const API_URL = getApiUrl();
       const token = localStorage.getItem('canvas_token');
-      
+
       const orderResponse = await fetch(`${API_URL}/payment/create-order`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          amount: total * 100,
-          currency: 'INR'
-        })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ amount: total * 100, currency: 'INR' })
       });
 
       const orderData = await orderResponse.json();
@@ -46,54 +68,52 @@ const CartDrawer = () => {
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'Canvas',
-        description: 'Purchase from Canvas',
+        description: 'Purchase from Canvas by Aryans Art',
         image: '/logo-remove.png',
         order_id: orderData.order_id,
-        handler: async function(response: any) {
+        handler: async (response: any) => {
           try {
-            // Verify payment on backend
-            const verifyResponse = await fetch(`${API_URL}/payment/verify-payment`, {
+            const verifyRes = await fetch(`${API_URL}/payment/verify-payment`, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
               body: JSON.stringify({
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature
               })
             });
-
-            const verifyData = await verifyResponse.json();
-            if (verifyResponse.ok && verifyData.success) {
-              toast.success(`Payment verified successfully! ID: ${response.razorpay_payment_id}`);
-              // Clear cart (we can't easily clear all items at once in context, but let's try)
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok && verifyData.success) {
+              toast.success(`✅ Payment successful! ID: ${response.razorpay_payment_id}`);
+              setShowPaymentModal(false);
               setIsOpen(false);
             } else {
               toast.error(verifyData.error || 'Payment verification failed');
             }
-          } catch (err) {
+          } catch {
             toast.error('Payment verification error');
           }
         },
         prefill: {
-          name: user.name || 'Guest User',
-          email: user.email || 'guest@example.com',
-          contact: user.mobileNumber || '9999999999'
+          name: user?.name || '',
+          email: user?.email || '',
+          contact: user?.mobileNumber || ''
         },
-        theme: {
-          color: '#4a2511'
-        }
+        theme: { color: '#8B4513' },
+        modal: { ondismiss: () => setIsProcessing(false) }
       };
 
-      const rzp1 = new (window as any).Razorpay(options);
-      rzp1.on('payment.failed', function (response: any){
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on('payment.failed', (response: any) => {
         toast.error(response.error.description);
+        setIsProcessing(false);
       });
-      rzp1.open();
+      rzp.open();
+      setShowPaymentModal(false);
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -101,12 +121,8 @@ const CartDrawer = () => {
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-foreground/40 z-[60] cursor-pointer"
-        onClick={() => setIsOpen(false)}
-      />
-      {/* Drawer */}
+      <div className="fixed inset-0 bg-foreground/40 z-[60] cursor-pointer" onClick={() => { setIsOpen(false); setShowPaymentModal(false); }} />
+
       <div className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-background z-[70] shadow-2xl animate-slide-in-right flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
@@ -127,7 +143,9 @@ const CartDrawer = () => {
             <div className="space-y-4">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center gap-4 py-3 border-b border-border/50">
-                  <div className="w-16 h-16 bg-card rounded-sm flex-shrink-0" />
+                  <div className="w-16 h-16 bg-card rounded-sm flex-shrink-0 overflow-hidden">
+                    {(item as any).image && <img src={(item as any).image} alt={item.name} className="w-full h-full object-cover" />}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-display text-sm font-medium text-foreground truncate">{item.name}</p>
                     <p className="font-body text-sm text-primary mt-0.5">₹{item.price.toLocaleString("en-IN")}</p>
@@ -150,32 +168,71 @@ const CartDrawer = () => {
           )}
         </div>
 
-        {/* Footer */}
-        {items.length > 0 && (
+        {/* Footer - Checkout Button */}
+        {items.length > 0 && !showPaymentModal && (
           <div className="border-t border-border px-6 py-5">
             <div className="flex items-center justify-between mb-4">
               <span className="font-body text-sm text-muted-foreground">Subtotal</span>
               <span className="font-display text-lg font-medium text-foreground">₹{total.toLocaleString("en-IN")}</span>
             </div>
-            <button 
-              onClick={handleCheckout}
-              className="w-full bg-primary text-primary-foreground py-3 font-body text-sm tracking-wider uppercase hover:bg-primary/90 transition-colors"
+            <button
+              onClick={handleCheckoutClick}
+              className="w-full bg-[#8B4513] text-white py-3 font-body text-sm tracking-wider uppercase rounded-lg hover:bg-[#8B4513]/90 transition-colors"
             >
               Proceed to Checkout
             </button>
+          </div>
+        )}
+
+        {/* Payment Method Selection */}
+        {showPaymentModal && (
+          <div className="border-t border-border px-6 py-6 bg-background">
+            <p className="font-display text-base font-semibold text-foreground mb-1">Choose Payment Method</p>
+            <p className="font-body text-xs text-muted-foreground mb-5">Order Total: <span className="font-semibold text-foreground">₹{total.toLocaleString("en-IN")}</span></p>
+
+            <div className="space-y-3">
+              <button
+                onClick={handleCOD}
+                disabled={isProcessing}
+                className="w-full flex items-center gap-4 p-4 border-2 border-[#8B4513]/20 rounded-xl hover:border-[#8B4513] hover:bg-[#8B4513]/5 transition-all text-left group"
+              >
+                <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors">
+                  <Truck className="w-5 h-5 text-amber-700" />
+                </div>
+                <div>
+                  <p className="font-body text-sm font-semibold text-foreground">Cash on Delivery</p>
+                  <p className="font-body text-xs text-muted-foreground">Pay when your order arrives at your door</p>
+                </div>
+              </button>
+
+              <button
+                onClick={handleOnlinePayment}
+                disabled={isProcessing}
+                className="w-full flex items-center gap-4 p-4 border-2 border-[#8B4513]/20 rounded-xl hover:border-[#8B4513] hover:bg-[#8B4513]/5 transition-all text-left group"
+              >
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 transition-colors">
+                  <CreditCard className="w-5 h-5 text-blue-700" />
+                </div>
+                <div>
+                  <p className="font-body text-sm font-semibold text-foreground">
+                    Pay Online {isProcessing && <span className="text-muted-foreground text-xs">(Processing...)</span>}
+                  </p>
+                  <p className="font-body text-xs text-muted-foreground">UPI, Card, Net Banking via Razorpay</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="w-full py-2 font-body text-xs text-muted-foreground hover:text-foreground transition-colors text-center"
+              >
+                ← Back to Cart
+              </button>
+            </div>
           </div>
         )}
       </div>
     </>
   );
 };
-
-const loadScript = (src: string) => new Promise((resolve) => {
-  const script = document.createElement('script');
-  script.src = src;
-  script.onload = () => resolve(true);
-  script.onerror = () => resolve(false);
-  document.body.appendChild(script);
-});
 
 export default CartDrawer;

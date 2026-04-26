@@ -21,14 +21,25 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'https://www.oncanvas.in',
-    'https://oncanvas.in'
-  ],
+  origin: function (origin: string | undefined, callback: Function) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://www.oncanvas.in',
+      'https://oncanvas.in',
+    ];
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));

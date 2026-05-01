@@ -4,11 +4,23 @@ import crypto from 'crypto';
 
 const router = Router();
 
-// Initialize Razorpay instance
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || ''
-});
+// Initialize Razorpay instance with a check
+let razorpay: any;
+try {
+  const key_id = process.env.RAZORPAY_KEY_ID;
+  const key_secret = process.env.RAZORPAY_KEY_SECRET;
+  
+  if (!key_id || !key_secret) {
+    console.warn('Razorpay keys are missing. Payment routes will not work correctly.');
+  }
+  
+  razorpay = new Razorpay({
+    key_id: key_id || 'dummy_id',
+    key_secret: key_secret || 'dummy_secret'
+  });
+} catch (error) {
+  console.error('Failed to initialize Razorpay:', error);
+}
 
 // Endpoint to create a Razorpay order
 router.post('/create-order', async (req: Request, res: Response) => {

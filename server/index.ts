@@ -11,7 +11,9 @@ import paymentRouter from './routes/payment';
 
 import connectDB from './lib/db';
 
-dotenv.config();
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
@@ -24,7 +26,9 @@ const corsOptions = {
   origin: function (origin: string | undefined, callback: Function) {
     const allowedOrigins = [
       'http://localhost:5173',
+      'http://127.0.0.1:5173',
       'http://localhost:3000',
+      'http://127.0.0.1:3000',
       'https://www.oncanvas.in',
       'https://oncanvas.in',
     ];

@@ -25,12 +25,30 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
     };
 
-    cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
-      console.log('Connected to MongoDB');
-      return mongoose;
-    });
+    console.log('Connecting to MongoDB...');
+    cached.promise = mongoose.connect(MONGO_URI, opts)
+      .then((mongoose) => {
+        console.log('✅ Connected to MongoDB Atlas');
+        return mongoose;
+      })
+      .catch(async (err) => {
+        console.error('❌ MongoDB Atlas connection failed:', err.message);
+        
+        // Try local fallback
+        const LOCAL_MONGO_URI = 'mongodb://127.0.0.1:27017/aryans_art';
+        console.log('Attempting local MongoDB fallback...');
+        try {
+          const localConn = await mongoose.connect(LOCAL_MONGO_URI, opts);
+          console.log('✅ Connected to local MongoDB');
+          return localConn;
+        } catch (localErr: any) {
+          console.error('❌ Local MongoDB fallback also failed:', localErr.message);
+          throw new Error('Database connection failed. Please check your MONGO_URI.');
+        }
+      });
   }
 
   try {

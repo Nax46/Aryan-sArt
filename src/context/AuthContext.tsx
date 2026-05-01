@@ -37,7 +37,10 @@ export const useAuth = () => {
 
 const getApiUrl = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') return 'http://localhost:5000/api';
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:5000/api';
+  }
   return '/api';
 };
 const API_URL = getApiUrl();
@@ -98,8 +101,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         result = JSON.parse(text);
       } catch (e) {
-        let snippet = text.substring(0, 150).replace(/<[^>]+>/g, '');
-        throw new Error(`Server Error (${res.status}): ${snippet}`);
+        if (res.status === 404) {
+          throw new Error("Endpoint not found (404). Is the server running?");
+        }
+        let snippet = text.substring(0, 150).replace(/<[^>]+>/g, '').trim();
+        throw new Error(`Server Error (${res.status}): ${snippet || "Internal Server Error"}`);
       }
       
       if (!result.success) {
@@ -135,8 +141,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         result = JSON.parse(text);
       } catch (e) {
-        let snippet = text.substring(0, 150).replace(/<[^>]+>/g, '');
-        throw new Error(`Server Error (${res.status}): ${snippet}`);
+        if (res.status === 404) {
+          throw new Error("Endpoint not found (404). Is the server running?");
+        }
+        let snippet = text.substring(0, 150).replace(/<[^>]+>/g, '').trim();
+        throw new Error(`Server Error (${res.status}): ${snippet || "Internal Server Error"}`);
       }
 
       if (!result.success) {

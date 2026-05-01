@@ -64,146 +64,180 @@ const AuthModal = () => {
 
   return (
     <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
-      <DialogContent className="max-w-[450px] p-6 bg-[#FFF8F0] border-2 border-[#8B4513]/20 rounded-xl overflow-hidden">
-        <div className="flex flex-col items-center mb-6">
-          <h2 className="text-3xl font-display font-bold text-[#8B4513] italic">Canvas</h2>
-          <p className="text-xs tracking-widest text-[#8B4513]/60 uppercase">by Aryans Art</p>
-        </div>
+      <DialogContent className="max-w-[450px] p-0 overflow-hidden bg-white border-none rounded-2xl shadow-2xl">
+        <div className="relative h-2 w-full bg-gradient-to-r from-[#8B4513] via-[#D2691E] to-[#8B4513]" />
+        
+        <div className="p-8">
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-16 h-16 bg-[#8B4513]/5 rounded-full flex items-center justify-center mb-4">
+              <span className="text-3xl font-display font-bold text-[#8B4513] italic">C</span>
+            </div>
+            <h2 className="text-3xl font-display font-bold text-[#4A2511] tracking-tight">Welcome Back</h2>
+            <p className="text-sm text-[#8B4513]/60 mt-1">Experience the art of precision</p>
+          </div>
 
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-[#8B4513]/10 mb-6">
-            <TabsTrigger value="login" className="data-[state=active]:bg-[#8B4513] data-[state=active]:text-white">Login</TabsTrigger>
-            <TabsTrigger value="signup" className="data-[state=active]:bg-[#8B4513] data-[state=active]:text-white">Sign Up</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="login">
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="loginMobile" className="text-[#8B4513]">Mobile Number</Label>
-                <Input
-                  id="loginMobile"
-                  type="tel"
-                  placeholder="Enter 10-digit mobile"
-                  required
-                  value={loginData.mobileNumber}
-                  onChange={(e) => setLoginData({...loginData, mobileNumber: validateMobile(e.target.value)})}
-                  className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513]"
-                />
-              </div>
-              <div className="space-y-2 relative">
-                <Label htmlFor="loginPassword" className="text-[#8B4513]">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="loginPassword"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    required
-                    value={loginData.password}
-                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                    className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513] pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8B4513]/40 hover:text-[#8B4513]"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
-
-              <Button 
-                type="submit" 
-                disabled={isLoading}
-                className="w-full bg-[#8B4513] hover:bg-[#8B4513]/90 text-white font-medium py-6 rounded-lg shadow-md transition-all active:scale-[0.98]"
+          <Tabs defaultValue="login" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-[#F9F7F5] p-1 rounded-xl mb-8">
+              <TabsTrigger 
+                value="login" 
+                className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#8B4513] data-[state=active]:shadow-sm transition-all py-2.5"
               >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
                 Login
-              </Button>
-            </form>
-          </TabsContent>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="signup" 
+                className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#8B4513] data-[state=active]:shadow-sm transition-all py-2.5"
+              >
+                Register
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="signup">
-            <form onSubmit={handleSignupSubmit} className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
-              <div className="space-y-2">
-                <Label htmlFor="signupName" className="text-[#8B4513]">Full Name</Label>
-                <Input
-                  id="signupName"
-                  placeholder="John Doe"
-                  required
-                  value={signupData.name}
-                  onChange={(e) => setSignupData({...signupData, name: e.target.value})}
-                  className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signupMobile" className="text-[#8B4513]">Mobile Number</Label>
-                <Input
-                  id="signupMobile"
-                  type="tel"
-                  placeholder="10-digit mobile"
-                  required
-                  value={signupData.mobileNumber}
-                  onChange={(e) => setSignupData({...signupData, mobileNumber: validateMobile(e.target.value)})}
-                  className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signupEmail" className="text-[#8B4513]">Email (Optional)</Label>
-                <Input
-                  id="signupEmail"
-                  type="email"
-                  placeholder="john@example.com"
-                  value={signupData.email}
-                  onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                  className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513]"
-                />
-              </div>
-              <div className="space-y-2 relative">
-                <Label htmlFor="signupPassword" className="text-[#8B4513]">Password</Label>
-                <div className="relative">
+            <TabsContent value="login" className="mt-0 focus-visible:outline-none">
+              <form onSubmit={handleLoginSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="loginMobile" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Mobile Number</Label>
                   <Input
-                    id="signupPassword"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Min 6 characters"
+                    id="loginMobile"
+                    type="tel"
+                    placeholder="Enter 10-digit mobile"
                     required
-                    minLength={6}
-                    value={signupData.password}
-                    onChange={(e) => setSignupData({...signupData, password: e.target.value})}
-                    className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513] pr-10"
+                    value={loginData.mobileNumber}
+                    onChange={(e) => setLoginData({...loginData, mobileNumber: validateMobile(e.target.value)})}
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
                   />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-[#8B4513]">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Repeat password"
-                  required
-                  value={signupData.confirmPassword}
-                  onChange={(e) => setSignupData({...signupData, confirmPassword: e.target.value})}
-                  className="bg-white border-[#8B4513]/20 focus-visible:ring-[#8B4513]"
-                />
-              </div>
+                <div className="space-y-2 relative">
+                  <div className="flex justify-between items-center px-1">
+                    <Label htmlFor="loginPassword" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70">Password</Label>
+                    <button type="button" className="text-[10px] text-[#8B4513]/50 hover:text-[#8B4513] font-medium transition-colors">Forgot Password?</button>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="loginPassword"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      required
+                      value={loginData.password}
+                      onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl pr-12"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8B4513]/30 hover:text-[#8B4513] transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
 
-              {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+                {error && (
+                  <div className="bg-red-50 border border-red-100 text-red-600 text-sm p-3 rounded-xl flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full shrink-0" />
+                    {error}
+                  </div>
+                )}
 
-              <Button 
-                type="submit" 
-                disabled={isLoading}
-                className="w-full bg-[#8B4513] hover:bg-[#8B4513]/90 text-white font-medium py-6 rounded-lg shadow-md transition-all active:scale-[0.98] mt-4"
-              >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-                Create Account
-              </Button>
-            </form>
-          </TabsContent>
-        </Tabs>
+                <Button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full h-14 bg-[#8B4513] hover:bg-[#6D360F] text-white font-bold rounded-xl shadow-lg shadow-[#8B4513]/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                >
+                  {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="signup" className="mt-0 focus-visible:outline-none">
+              <form onSubmit={handleSignupSubmit} className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-2">
+                  <Label htmlFor="signupName" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Full Name</Label>
+                  <Input
+                    id="signupName"
+                    placeholder="Sunil Jangid"
+                    required
+                    value={signupData.name}
+                    onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signupMobile" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Mobile Number</Label>
+                  <Input
+                    id="signupMobile"
+                    type="tel"
+                    placeholder="10-digit mobile"
+                    required
+                    value={signupData.mobileNumber}
+                    onChange={(e) => setSignupData({...signupData, mobileNumber: validateMobile(e.target.value)})}
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signupEmail" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Email (Optional)</Label>
+                  <Input
+                    id="signupEmail"
+                    type="email"
+                    placeholder="sunil@example.com"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signupPassword" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Password</Label>
+                    <Input
+                      id="signupPassword"
+                      type="password"
+                      placeholder="Min 6 chars"
+                      required
+                      minLength={6}
+                      value={signupData.password}
+                      onChange={(e) => setSignupData({...signupData, password: e.target.value})}
+                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Confirm</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="Repeat"
+                      required
+                      value={signupData.confirmPassword}
+                      onChange={(e) => setSignupData({...signupData, confirmPassword: e.target.value})}
+                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="bg-red-50 border border-red-100 text-red-600 text-sm p-3 rounded-xl flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full shrink-0" />
+                    {error}
+                  </div>
+                )}
+
+                <Button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full h-14 bg-[#8B4513] hover:bg-[#6D360F] text-white font-bold rounded-xl shadow-lg shadow-[#8B4513]/20 transition-all active:scale-[0.98] mt-4"
+                >
+                  {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : "Create Account"}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
+
+          <p className="text-center text-[10px] text-[#8B4513]/40 mt-8 uppercase tracking-[0.2em]">
+            Precision Crafted by Aryans Art
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
+  );
+};
   );
 };
 

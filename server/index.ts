@@ -33,10 +33,26 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: true, // Reflect the request origin in the Access-Control-Allow-Origin header
+  origin: function (origin: string | undefined, callback: any) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'https://www.oncanvas.in',
+      'https://oncanvas.in',
+    ];
+    
+    // Allow requests with no origin (mobile apps, Postman, etc)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-admin-key'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };

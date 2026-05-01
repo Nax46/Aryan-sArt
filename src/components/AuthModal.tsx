@@ -30,7 +30,11 @@ const AuthModal = () => {
     try {
       await login(loginData.mobileNumber, loginData.password);
     } catch (err: any) {
-      setError(err.message || "Invalid credentials");
+      if (err.message === "Failed to fetch") {
+        setError("Connection failed. Is the server running? (Check CORS or server status)");
+      } else {
+        setError(err.message || "Invalid credentials");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +58,11 @@ const AuthModal = () => {
         signupData.email || undefined
       );
     } catch (err: any) {
-      setError(err.message || "Signup failed");
+      if (err.message === "Failed to fetch") {
+        setError("Connection failed. Is the server running?");
+      } else {
+        setError(err.message || "Signup failed");
+      }
     } finally {
       setIsLoading(false);
     }

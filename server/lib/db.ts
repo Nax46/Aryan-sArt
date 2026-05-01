@@ -46,7 +46,7 @@ async function connectDB() {
           return localConn;
         } catch (localErr: any) {
           console.error('❌ Local MongoDB fallback also failed:', localErr.message);
-          throw new Error('Database connection failed. Please check your MONGO_URI.');
+          return null; // Return null instead of throwing
         }
       });
   }
@@ -55,7 +55,7 @@ async function connectDB() {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
-    throw e;
+    return null; // Return null instead of throwing
   }
 
   return cached.conn;

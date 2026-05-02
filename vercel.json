@@ -1,6 +1,13 @@
 {
-  "buildCommand": "npm install && cd server && npm install",
+  "buildCommand": "npm install && cd server && npm install && cd .. && npm run build",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/[...slug]" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/[...slug]"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }

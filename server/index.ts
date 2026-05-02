@@ -81,8 +81,5 @@ app.use('/api/custom-orders', customOrdersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/payment', paymentRouter);
 
-const server = app.listen(Number(PORT), '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
+// Export the app for Vercel Serverless Functions
 export default app;

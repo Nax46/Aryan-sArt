@@ -1,15 +1,6 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/[...slug].ts",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/[...slug].ts"
-    }
+  "buildCommand": "npm install && cd server && npm install",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/[...slug]" }
   ]
 }

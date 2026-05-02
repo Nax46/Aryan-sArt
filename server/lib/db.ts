@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://anshuljangidindian_db_user:2SJZ4SIptp7FKucb@cluster01.dejvuao.mongodb.net/?appName=Cluster01';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://anshuljangidindian_db_user:2SJZ4SIptp7FKucb@cluster01.dejvuao.mongodb.net/canvas?retryWrites=true&w=majority';
 
 if (!MONGO_URI) {
-  throw new Error('Please define the MONGO_URI environment variable inside .env');
+  console.error('❌ MONGO_URI is missing!');
 }
 
 /**

@@ -85,27 +85,9 @@ router.post('/login', async (req: Request, res: Response) => {
   try {
     const db = await connectDB();
     if (!db) {
-      console.warn("⚠️ Database not connected. Using Mock Auth for development.");
-      // Mock login for development
-      let { mobileNumber } = req.body;
-      if (mobileNumber === "8000852154" || mobileNumber === "8000000000") {
-         const mockUser = {
-           _id: "mock_id_123",
-           name: "Test User (Mock)",
-           mobileNumber: mobileNumber,
-           email: "test@example.com"
-         };
-         const token = generateToken(mockUser._id);
-         return res.status(200).json({
-           success: true,
-           data: { user: mockUser, token },
-           message: "Mock Login Successful (No Database)"
-         });
-      }
-
       return res.status(503).json({ 
         success: false, 
-        message: "Database connection unavailable. Please check your MONGO_URI configuration." 
+        message: "Database connection unavailable. Please ensure your MongoDB Atlas IP whitelist allows Vercel (0.0.0.0/0)." 
       });
     }
     

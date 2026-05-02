@@ -36,11 +36,21 @@ export const useAuth = () => {
 };
 
 const getApiUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+  
+  // In production (on oncanvas.in), always use the relative /api path
+  if (hostname === 'www.oncanvas.in' || hostname === 'oncanvas.in') {
+    return '/api';
+  }
+  
+  // Fallback to env variable if present
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  
+  // Local development
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
     return 'http://localhost:5000/api';
   }
+  
   return '/api';
 };
 const API_URL = getApiUrl();

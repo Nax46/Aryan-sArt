@@ -5,8 +5,14 @@ import { toast } from "sonner";
 import { useState } from "react";
 
 const getApiUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+  
+  if (hostname === 'www.oncanvas.in' || hostname === 'oncanvas.in') {
+    return '/api';
+  }
+  
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
     return 'http://localhost:5000/api';
   }

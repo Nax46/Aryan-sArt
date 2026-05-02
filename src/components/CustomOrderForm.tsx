@@ -34,8 +34,16 @@ const CustomOrderForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const response = await fetch(`${apiUrl}/api/custom-orders`, {
+      const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+      let apiUrl = '/api';
+      
+      if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        apiUrl = 'http://localhost:5000/api';
+      } else if (import.meta.env.VITE_API_URL) {
+        apiUrl = import.meta.env.VITE_API_URL;
+      }
+      
+      const response = await fetch(`${apiUrl}/custom-orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

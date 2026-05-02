@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://anshuljangidindian_db_user:2SJZ4SIptp7FKucb@cluster01.dejvuao.mongodb.net/canvas?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://anshuljangidindian_db_user:<db_password>@cluster01.dejvuao.mongodb.net/canvas?retryWrites=true&w=majority';
 
 if (!MONGO_URI) {
   console.error('❌ MONGO_URI is missing!');
@@ -25,29 +25,24 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
     };
 
-    console.log('Connecting to MongoDB...');
+    console.log('Connecting to MongoDB Atlas...');
     cached.promise = mongoose.connect(MONGO_URI, opts)
       .then((mongoose) => {
-        console.log('✅ Connected to MongoDB Atlas');
+        console.log('✅ Successfully connected to MongoDB Atlas');
         return mongoose;
       })
-      .catch(async (err) => {
-        console.error('❌ MongoDB Atlas connection failed:', err.message);
-        
-        // Try local fallback
-        const LOCAL_MONGO_URI = 'mongodb://127.0.0.1:27017/aryans_art';
-        console.log('Attempting local MongoDB fallback...');
-        try {
-          const localConn = await mongoose.connect(LOCAL_MONGO_URI, opts);
-          console.log('✅ Connected to local MongoDB');
-          return localConn;
-        } catch (localErr: any) {
-          console.error('❌ Local MongoDB fallback also failed:', localErr.message);
-          return null; // Return null instead of throwing
-        }
+      .catch((err) => {
+        console.error('❌ MongoDB Connection Error Details:', {
+          message: err.message,
+          code: err.code,
+          name: err.name
+        });
+        return null;
       });
   }
 
@@ -55,7 +50,7 @@ async function connectDB() {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
-    return null; // Return null instead of throwing
+    return null;
   }
 
   return cached.conn;

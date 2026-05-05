@@ -48,17 +48,24 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate("/")}>
-                <div className="flex items-baseline gap-2">
-                  <h1 className="text-2xl sm:text-3xl font-display font-bold text-[#8B4513] italic leading-none">
-                    Canvas
-                  </h1>
-                  <span className="text-[#8B4513]/40 font-body text-sm hidden sm:inline">by</span>
-                  <span className="text-sm sm:text-base font-body font-semibold text-[#8B4513]/70 tracking-wide hidden sm:inline">Aryans Art</span>
+              <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
+                <img 
+                  src="/ON_CANVAS_Logo-removebg-preview.png" 
+                  alt="Logo" 
+                  className="h-12 sm:h-16 w-auto object-contain"
+                />
+                <div className="flex flex-col">
+                  <div className="flex items-baseline gap-2">
+                    <h1 className="text-xl sm:text-2xl font-display font-bold text-[#7E1E1E] italic leading-none">
+                      OnCanvas
+                    </h1>
+                    <span className="text-[#7E1E1E]/40 font-body text-xs hidden sm:inline">by</span>
+                    <span className="text-xs sm:text-sm font-body font-semibold text-[#7E1E1E]/70 tracking-wide hidden sm:inline">Aryans Art</span>
+                  </div>
+                  <p className="hidden sm:block text-[10px] tracking-[0.2em] text-[#7E1E1E]/50 font-body uppercase">
+                    Crafting memories with precision
+                  </p>
                 </div>
-                <p className="hidden sm:block text-[10px] sm:text-xs tracking-[0.2em] text-[#8B4513]/50 font-body uppercase">
-                  Crafting memories with precision
-                </p>
               </div>
             </div>
 

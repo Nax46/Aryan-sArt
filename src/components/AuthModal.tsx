@@ -77,8 +77,12 @@ const AuthModal = () => {
         
         <div className="p-8">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-[#8B4513]/5 rounded-full flex items-center justify-center mb-4">
-              <span className="text-3xl font-display font-bold text-[#8B4513] italic">C</span>
+            <div className="mb-4">
+              <img 
+                src="/ON_CANVAS_FULL_Logo-removebg-preview.png" 
+                alt="Canvas Logo" 
+                className="h-24 w-auto object-contain"
+              />
             </div>
             <h2 className="text-3xl font-display font-bold text-[#4A2511] tracking-tight">Welcome Back</h2>
             <p className="text-sm text-[#8B4513]/60 mt-1">Experience the art of precision</p>

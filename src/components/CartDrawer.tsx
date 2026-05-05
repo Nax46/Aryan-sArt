@@ -76,9 +76,9 @@ const CartDrawer = () => {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ShhaN6FBWROkMh',
         amount: orderData.amount,
         currency: orderData.currency,
-        name: 'Canvas',
-        description: 'Purchase from Canvas by Aryans Art',
-        image: '/logo-remove.png',
+        name: 'OnCanvas',
+        description: 'Purchase from OnCanvas by Aryans Art',
+        image: '/ON_CANVAS_FULL_Logo-removebg-preview.png',
         order_id: orderData.order_id,
         handler: async (response: any) => {
           try {

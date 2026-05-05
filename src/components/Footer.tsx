@@ -6,9 +6,11 @@ const Footer = () => (
       <div className="grid md:grid-cols-5 gap-10 mb-12">
         {/* Brand */}
         <div className="md:col-span-2">
-          <h2 className="text-3xl font-display font-bold italic text-parchment mb-0.5">Canvas</h2>
-          <p className="text-sm font-body font-semibold text-sand/60 mb-1">by Aryans Art</p>
-          <p className="text-xs tracking-[0.2em] uppercase text-sand/40 font-body mb-4">Crafted Spaces</p>
+          <img 
+            src="/ON_CANVAS_FULL_Logo-removebg-preview.png" 
+            alt="Canvas Logo" 
+            className="h-24 sm:h-32 w-auto object-contain mb-4 filter brightness-0 invert"
+          />
           <p className="font-body text-sm text-sand/50 leading-relaxed max-w-xs mb-4">
             Precision CNC & laser-cut temples and customized interior decor items like lamps. Crafted in Bundi, Rajasthan. Delivered across India.
           </p>
@@ -46,7 +48,7 @@ const Footer = () => (
 
       <div className="border-t border-parchment/10 pt-6">
         <p className="font-body text-xs text-sand/40 text-center">
-          © 2026 Canvas by Sunil Jangid. All rights reserved. Made with precision in Bundi, Rajasthan.
+          © 2026 OnCanvas by Sunil Jangid. All rights reserved. Made with precision in Bundi, Rajasthan.
         </p>
       </div>
     </div>

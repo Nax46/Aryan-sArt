@@ -108,7 +108,7 @@ const CartDrawer = () => {
           email: user?.email || '',
           contact: user?.mobileNumber || ''
         },
-        theme: { color: '#8B4513' },
+        theme: { color: '#7E1E1E' },
         modal: { ondismiss: () => setIsProcessing(false) }
       };
 
@@ -186,7 +186,7 @@ const CartDrawer = () => {
             </div>
             <button
               onClick={handleCheckoutClick}
-              className="w-full bg-[#8B4513] text-white py-3 font-body text-sm tracking-wider uppercase rounded-lg hover:bg-[#8B4513]/90 transition-colors"
+              className="w-full bg-[#7E1E1E] text-white py-3 font-body text-sm tracking-wider uppercase rounded-lg hover:bg-[#7E1E1E]/90 transition-colors"
             >
               Proceed to Checkout
             </button>
@@ -203,7 +203,7 @@ const CartDrawer = () => {
               <button
                 onClick={handleCOD}
                 disabled={isProcessing}
-                className="w-full flex items-center gap-4 p-4 border-2 border-[#8B4513]/20 rounded-xl hover:border-[#8B4513] hover:bg-[#8B4513]/5 transition-all text-left group"
+                className="w-full flex items-center gap-4 p-4 border-2 border-[#7E1E1E]/20 rounded-xl hover:border-[#7E1E1E] hover:bg-[#7E1E1E]/5 transition-all text-left group"
               >
                 <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors">
                   <Truck className="w-5 h-5 text-amber-700" />
@@ -217,7 +217,7 @@ const CartDrawer = () => {
               <button
                 onClick={handleOnlinePayment}
                 disabled={isProcessing}
-                className="w-full flex items-center gap-4 p-4 border-2 border-[#8B4513]/20 rounded-xl hover:border-[#8B4513] hover:bg-[#8B4513]/5 transition-all text-left group"
+                className="w-full flex items-center gap-4 p-4 border-2 border-[#7E1E1E]/20 rounded-xl hover:border-[#7E1E1E] hover:bg-[#7E1E1E]/5 transition-all text-left group"
               >
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 transition-colors">
                   <CreditCard className="w-5 h-5 text-blue-700" />

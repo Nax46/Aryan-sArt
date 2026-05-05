@@ -73,7 +73,7 @@ const AuthModal = () => {
   return (
     <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
       <DialogContent className="max-w-[450px] p-0 overflow-hidden bg-white border-none rounded-2xl shadow-2xl">
-        <div className="relative h-2 w-full bg-gradient-to-r from-[#8B4513] via-[#D2691E] to-[#8B4513]" />
+        <div className="relative h-2 w-full bg-gradient-to-r from-[#7E1E1E] via-[#D2691E] to-[#7E1E1E]" />
         
         <div className="p-8">
           <div className="flex flex-col items-center mb-8">
@@ -84,21 +84,21 @@ const AuthModal = () => {
                 className="h-24 w-auto object-contain"
               />
             </div>
-            <h2 className="text-3xl font-display font-bold text-[#4A2511] tracking-tight">Welcome Back</h2>
-            <p className="text-sm text-[#8B4513]/60 mt-1">Experience the art of precision</p>
+            <h2 className="text-3xl font-display font-bold text-[#3A1111] tracking-tight">Welcome Back</h2>
+            <p className="text-sm text-[#7E1E1E]/60 mt-1">Experience the art of precision</p>
           </div>
 
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-[#F9F7F5] p-1 rounded-xl mb-8">
               <TabsTrigger 
                 value="login" 
-                className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#8B4513] data-[state=active]:shadow-sm transition-all py-2.5"
+                className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#7E1E1E] data-[state=active]:shadow-sm transition-all py-2.5"
               >
                 Login
               </TabsTrigger>
               <TabsTrigger 
                 value="signup" 
-                className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#8B4513] data-[state=active]:shadow-sm transition-all py-2.5"
+                className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#7E1E1E] data-[state=active]:shadow-sm transition-all py-2.5"
               >
                 Register
               </TabsTrigger>
@@ -107,7 +107,7 @@ const AuthModal = () => {
             <TabsContent value="login" className="mt-0 focus-visible:outline-none">
               <form onSubmit={handleLoginSubmit} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="loginMobile" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Mobile Number</Label>
+                  <Label htmlFor="loginMobile" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70 ml-1">Mobile Number</Label>
                   <Input
                     id="loginMobile"
                     type="tel"
@@ -115,13 +115,13 @@ const AuthModal = () => {
                     required
                     value={loginData.mobileNumber}
                     onChange={(e) => setLoginData({...loginData, mobileNumber: validateMobile(e.target.value)})}
-                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl"
                   />
                 </div>
                 <div className="space-y-2 relative">
                   <div className="flex justify-between items-center px-1">
-                    <Label htmlFor="loginPassword" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70">Password</Label>
-                    <button type="button" className="text-[10px] text-[#8B4513]/50 hover:text-[#8B4513] font-medium transition-colors">Forgot Password?</button>
+                    <Label htmlFor="loginPassword" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70">Password</Label>
+                    <button type="button" className="text-[10px] text-[#7E1E1E]/50 hover:text-[#7E1E1E] font-medium transition-colors">Forgot Password?</button>
                   </div>
                   <div className="relative">
                     <Input
@@ -131,12 +131,12 @@ const AuthModal = () => {
                       required
                       value={loginData.password}
                       onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl pr-12"
+                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl pr-12"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8B4513]/30 hover:text-[#8B4513] transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7E1E1E]/30 hover:text-[#7E1E1E] transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -153,7 +153,7 @@ const AuthModal = () => {
                 <Button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full h-14 bg-[#8B4513] hover:bg-[#6D360F] text-white font-bold rounded-xl shadow-lg shadow-[#8B4513]/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                  className="w-full h-14 bg-[#7E1E1E] hover:bg-[#5D1616] text-white font-bold rounded-xl shadow-lg shadow-[#7E1E1E]/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                 >
                   {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
                 </Button>
@@ -163,18 +163,18 @@ const AuthModal = () => {
             <TabsContent value="signup" className="mt-0 focus-visible:outline-none">
               <form onSubmit={handleSignupSubmit} className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 <div className="space-y-2">
-                  <Label htmlFor="signupName" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Full Name</Label>
+                  <Label htmlFor="signupName" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70 ml-1">Full Name</Label>
                   <Input
                     id="signupName"
                     placeholder="Sunil Jangid"
                     required
                     value={signupData.name}
                     onChange={(e) => setSignupData({...signupData, name: e.target.value})}
-                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signupMobile" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Mobile Number</Label>
+                  <Label htmlFor="signupMobile" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70 ml-1">Mobile Number</Label>
                   <Input
                     id="signupMobile"
                     type="tel"
@@ -182,23 +182,23 @@ const AuthModal = () => {
                     required
                     value={signupData.mobileNumber}
                     onChange={(e) => setSignupData({...signupData, mobileNumber: validateMobile(e.target.value)})}
-                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signupEmail" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Email (Optional)</Label>
+                  <Label htmlFor="signupEmail" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70 ml-1">Email (Optional)</Label>
                   <Input
                     id="signupEmail"
                     type="email"
                     placeholder="sunil@example.com"
                     value={signupData.email}
                     onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                    className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signupPassword" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Password</Label>
+                    <Label htmlFor="signupPassword" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70 ml-1">Password</Label>
                     <Input
                       id="signupPassword"
                       type="password"
@@ -207,11 +207,11 @@ const AuthModal = () => {
                       minLength={6}
                       value={signupData.password}
                       onChange={(e) => setSignupData({...signupData, password: e.target.value})}
-                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-xs font-semibold uppercase tracking-wider text-[#8B4513]/70 ml-1">Confirm</Label>
+                    <Label htmlFor="confirmPassword" className="text-xs font-semibold uppercase tracking-wider text-[#7E1E1E]/70 ml-1">Confirm</Label>
                     <Input
                       id="confirmPassword"
                       type="password"
@@ -219,7 +219,7 @@ const AuthModal = () => {
                       required
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData({...signupData, confirmPassword: e.target.value})}
-                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#8B4513]/30 focus:bg-white transition-all rounded-xl"
+                      className="h-12 bg-[#F9F7F5] border-transparent focus:border-[#7E1E1E]/30 focus:bg-white transition-all rounded-xl"
                     />
                   </div>
                 </div>
@@ -234,7 +234,7 @@ const AuthModal = () => {
                 <Button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full h-14 bg-[#8B4513] hover:bg-[#6D360F] text-white font-bold rounded-xl shadow-lg shadow-[#8B4513]/20 transition-all active:scale-[0.98] mt-4"
+                  className="w-full h-14 bg-[#7E1E1E] hover:bg-[#5D1616] text-white font-bold rounded-xl shadow-lg shadow-[#7E1E1E]/20 transition-all active:scale-[0.98] mt-4"
                 >
                   {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : "Create Account"}
                 </Button>
@@ -242,7 +242,7 @@ const AuthModal = () => {
             </TabsContent>
           </Tabs>
 
-          <p className="text-center text-[10px] text-[#8B4513]/40 mt-8 uppercase tracking-[0.2em]">
+          <p className="text-center text-[10px] text-[#7E1E1E]/40 mt-8 uppercase tracking-[0.2em]">
             Precision Crafted by Aryans Art
           </p>
         </div>

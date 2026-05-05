@@ -13,10 +13,10 @@
     --popover: 39 45% 92%;
     --popover-foreground: 30 10% 15%;
 
-    --primary: 0 62% 30%;
+    --primary: 0 62% 31%;
     --primary-foreground: 39 45% 92%;
 
-    --secondary: 14 60% 40%;
+    --secondary: 0 62% 31%;
     --secondary-foreground: 39 45% 92%;
 
     --muted: 36 30% 80%;
@@ -30,7 +30,7 @@
 
     --border: 36 25% 78%;
     --input: 36 25% 78%;
-    --ring: 0 62% 30%;
+    --ring: 0 62% 31%;
 
     --radius: 0.75rem;
 
@@ -40,7 +40,7 @@
     --sand: 36 30% 80%;
     --gold: 37 40% 54%;
     --parchment: 39 45% 92%;
-    --burgundy: 0 62% 30%;
+    --burgundy: 0 62% 31%;
     --terracotta: 14 60% 40%;
     --ink: 30 20% 10%;
 

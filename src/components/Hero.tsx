@@ -23,7 +23,7 @@ const Hero = () => (
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: '0.4s' }}>
         <a
           href="#arrivals"
-          className="px-8 py-3 bg-[#8B4513] text-white font-body text-sm tracking-wider uppercase rounded-lg hover:bg-[#8B4513]/90 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 duration-300"
+          className="px-8 py-3 bg-[#7E1E1E] text-white font-body text-sm tracking-wider uppercase rounded-lg hover:bg-[#7E1E1E]/90 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 duration-300"
         >
           Explore Collection
         </a>

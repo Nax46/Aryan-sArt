@@ -28,5 +28,7 @@
     "url": "https://github.com/anshuljangid200/Aryan-sArt/issues"
   },
   "homepage": "https://github.com/anshuljangid200/Aryan-sArt#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10"
+  }
 }

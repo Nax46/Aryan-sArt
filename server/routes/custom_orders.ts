@@ -13,7 +13,7 @@ router.post('/', async (req: Request, res: Response) => {
     
     if (imageBase64) {
       // Decode base64 
-      const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+      const matches = imageBase64.match(/^data:([A-Za-z+/.-]+);base64,(.+)$/);
       if (matches && matches.length === 3) {
         const type = matches[1];
         const buffer = Buffer.from(matches[2], 'base64');

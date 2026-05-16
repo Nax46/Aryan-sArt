@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://anshuljangidindian_db_user:<db_password>@cluster01.dejvuao.mongodb.net/canvas?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
-  console.error('❌ MONGO_URI is missing!');
+  console.error('❌ CRITICAL: MONGO_URI environment variable is missing!');
+  console.error('Please add MONGO_URI to your Railway variables or .env file.');
 }
 
 /**

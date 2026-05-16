@@ -21,7 +21,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     if (!db) {
       return res.status(503).json({ 
         success: false, 
-        message: "Database connection unavailable. Please check your MONGO_URI configuration." 
+        message: "Database connection unavailable. Please ensure your MONGO_URI is set in Railway and MongoDB Atlas allows connections from Railway (IP Whitelist: 0.0.0.0/0)." 
       });
     }
     let { name, mobileNumber, password, email } = req.body;

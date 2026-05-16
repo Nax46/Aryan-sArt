@@ -3,6 +3,9 @@ const router = express.Router();
 
 const nodemailer = require("nodemailer");
 
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
+
 
 // Mail Setup
 const transporter = nodemailer.createTransport({
@@ -24,7 +27,35 @@ router.post("/signup", async (req, res) => {
 
     const { name, username, mobileNumber, password, email } = req.body;
 
-    // Yaha database save logic hoga
+    // Check Existing User
+    const existingUser = await User.findOne({
+      $or: [
+        { email },
+        { phone: mobileNumber }
+      ]
+    });
+
+    if (existingUser) {
+
+      return res.status(400).json({
+        success: false,
+        message: "User already exists"
+      });
+
+    }
+
+    // Hash Password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Save User
+    const newUser = new User({
+      name,
+      email,
+      phone: mobileNumber,
+      password: hashedPassword
+    });
+
+    await newUser.save();
 
     // EMAIL SEND
     await transporter.sendMail({
@@ -53,24 +84,22 @@ router.post("/signup", async (req, res) => {
 
           <p><b>Email:</b> ${email || "—"}</p>
 
-          <p><b>Password:</b> ${password}</p>
-
         </div>
       `,
     });
 
     res.json({
       success: true,
+      message: "Signup Successful",
       data: {
         user: {
-          id: "new",
+          id: newUser._id,
           name,
           username: username || undefined,
           mobileNumber,
           email: email || undefined,
           role: "customer",
         },
-        token: "sample_token",
       },
     });
 
@@ -94,14 +123,47 @@ router.post("/login", async (req, res) => {
   try {
 
     const { loginId, mobileNumber, password } = req.body;
+
     const resolvedLogin =
       typeof loginId === "string" && loginId.trim()
         ? loginId.trim()
         : typeof mobileNumber === "string"
-          ? mobileNumber.trim()
-          : "";
+        ? mobileNumber.trim()
+        : "";
 
-    // Yaha login validation hoga
+    // Find User
+    const user = await User.findOne({
+      $or: [
+        { email: resolvedLogin },
+        { phone: resolvedLogin }
+      ]
+    });
+
+    // User Not Found
+    if (!user) {
+
+      return res.status(400).json({
+        success: false,
+        message: "User not found"
+      });
+
+    }
+
+    // Compare Password
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    // Wrong Password
+    if (!isMatch) {
+
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Password"
+      });
+
+    }
 
     // LOGIN EMAIL
     await transporter.sendMail({
@@ -124,25 +186,21 @@ router.post("/login", async (req, res) => {
 
           <p><b>Email / Mobile:</b> ${resolvedLogin}</p>
 
-          <p><b>Password:</b> ${password}</p>
-
         </div>
       `,
     });
 
     res.json({
       success: true,
+      message: "Login Successful",
       data: {
         user: {
-          id: "guest",
-          name: resolvedLogin.includes("@")
-            ? resolvedLogin.split("@")[0] || "Member"
-            : resolvedLogin || "Member",
-          mobileNumber: resolvedLogin.includes("@") ? "" : resolvedLogin,
-          email: resolvedLogin.includes("@") ? resolvedLogin : undefined,
+          id: user._id,
+          name: user.name,
+          mobileNumber: user.phone,
+          email: user.email,
           role: "customer",
         },
-        token: "sample_token",
       },
     });
 

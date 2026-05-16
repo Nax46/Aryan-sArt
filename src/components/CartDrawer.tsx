@@ -106,7 +106,7 @@ const CartDrawer = () => {
         prefill: {
           name: user?.name || '',
           email: user?.email || '',
-          contact: user?.mobileNumber || ''
+          contact: user?.mobileNumber || user?.email || ''
         },
         theme: { color: '#7E1E1E' },
         modal: { ondismiss: () => setIsProcessing(false) }

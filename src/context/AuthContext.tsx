@@ -13,6 +13,7 @@ export interface User {
     city?: string;
     pincode?: string;
   };
+  username?: string;
 }
 
 interface AuthContextType {
@@ -20,8 +21,8 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (mobileNumber: string, password: string) => Promise<void>;
-  signup: (name: string, mobileNumber: string, password: string, email?: string) => Promise<void>;
+  login: (loginId: string, password: string, rememberMe?: boolean) => Promise<void>;
+  signup: (name: string, mobileNumber: string, password: string, email?: string, username?: string) => Promise<void>;
   logout: () => void;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
@@ -63,7 +64,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const storedToken = localStorage.getItem("canvas_token");
+      const storedToken =
+        localStorage.getItem("canvas_token") || sessionStorage.getItem("canvas_token");
       if (storedToken) {
         try {
           const res = await fetch(`${API_URL}/auth/me`, {
@@ -85,10 +87,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setToken(storedToken);
           } else {
             localStorage.removeItem("canvas_token");
+            sessionStorage.removeItem("canvas_token");
           }
         } catch (error) {
           console.error("Session restoration failed:", error);
           localStorage.removeItem("canvas_token");
+          sessionStorage.removeItem("canvas_token");
         }
       }
       setIsLoading(false);
@@ -97,13 +101,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializeAuth();
   }, []);
 
-  const login = async (mobileNumber: string, password: string) => {
+  const login = async (loginId: string, password: string, rememberMe = true) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobileNumber, password })
+        body: JSON.stringify({ loginId: loginId.trim(), password })
       });
       
       const text = await res.text();
@@ -125,8 +129,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { user, token } = result.data;
       setUser(user);
       setToken(token);
-      localStorage.setItem("canvas_token", token);
-      
+      if (rememberMe) {
+        localStorage.setItem("canvas_token", token);
+        sessionStorage.removeItem("canvas_token");
+      } else {
+        sessionStorage.setItem("canvas_token", token);
+        localStorage.removeItem("canvas_token");
+      }
+
       setIsAuthModalOpen(false);
       toast.success("Logged in successfully!");
     } catch (error: any) {
@@ -137,13 +147,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signup = async (name: string, mobileNumber: string, password: string, email?: string) => {
+  const signup = async (name: string, mobileNumber: string, password: string, email?: string, username?: string) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, mobileNumber, password, email })
+        body: JSON.stringify({ name, mobileNumber, password, email, username })
       });
       
       const text = await res.text();
@@ -181,6 +191,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setToken(null);
     localStorage.removeItem("canvas_token");
+    sessionStorage.removeItem("canvas_token");
     toast.success("Logged out successfully");
   };
 

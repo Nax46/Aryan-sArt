@@ -157,7 +157,7 @@ const ProductPage = () => {
       <CartDrawer />
       <WishlistDrawer />
       <AuthModal />
-      <WhatsAppButton />
+      {/*<WhatsAppButton />*/}
     </div>
   );
 };

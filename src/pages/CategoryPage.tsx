@@ -78,7 +78,7 @@ const CategoryPage = () => {
       <CartDrawer />
       <WishlistDrawer />
       <AuthModal />
-      <WhatsAppButton />
+      {/*<WhatsAppButton />*/}
     </div>
   );
 };

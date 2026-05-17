@@ -86,7 +86,7 @@ const CustomOrderForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Full Name</label>
-              <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 border border-border rounded-sm bg-transparent focus:ring-1 focus:ring-primary" placeholder="Sunil Jangid" />
+              <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 border border-border rounded-sm bg-transparent focus:ring-1 focus:ring-primary" placeholder="FULL NAME" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Contact Number</label>

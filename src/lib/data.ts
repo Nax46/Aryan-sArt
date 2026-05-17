@@ -138,6 +138,24 @@ export const products: Product[] = [
     image: "/lamps/10_Stylish_Cardboard_DIY_Room_Decor_Ideas_for_Teens.jfif",
     description: "Youthful and vibrant, this lamp brings a stylish DIY aesthetic to your bedroom or workspace without compromising on quality."
   },
+  {
+    id: 107,
+    name: "DIY Styled Decor Lamp",
+    price: 2500,
+    category: "Lamps",
+    color: "hsl(45, 40%, 60%)",
+    image: "/lamps/10_Stylish_Cardboard_DIY_Room_Decor_Ideas_for_Teens.jfif",
+    description: "Youthful and vibrant, this lamp brings a stylish DIY aesthetic to your bedroom or workspace without compromising on quality."
+  },
+  {
+    id: 108,
+    name: "DIY Styled Decor Lamp",
+    price: 2500,
+    category: "Lamps",
+    color: "hsl(45, 40%, 60%)",
+    image: "/lamps/10_Stylish_Cardboard_DIY_Room_Decor_Ideas_for_Teens.jfif",
+    description: "Youthful and vibrant, this lamp brings a stylish DIY aesthetic to your bedroom or workspace without compromising on quality."
+  },
 
   // DECOR & OBJECTS (IDs 201-206)
   {
@@ -194,6 +212,24 @@ export const products: Product[] = [
     image: "/Decor_and_Objects/download.jfif",
     description: "Less is more. This minimalist decor piece speaks volumes with its clean lines and artistic silhouette."
   },
+  {
+    id: 207,
+    name: "Artistic Minimalist Decor",
+    price: 2400,
+    category: "Decor & Objects",
+    color: "hsl(180, 20%, 60%)",
+    image: "/Decor_and_Objects/download.jfif",
+    description: "Less is more. This minimalist decor piece speaks volumes with its clean lines and artistic silhouette."
+  },
+  {
+    id: 208,
+    name: "Artistic Minimalist Decor",
+    price: 2400,
+    category: "Decor & Objects",
+    color: "hsl(180, 20%, 60%)",
+    image: "/Decor_and_Objects/download.jfif",
+    description: "Less is more. This minimalist decor piece speaks volumes with its clean lines and artistic silhouette."
+  },
   // PAINTING (IDs 301-303)
   {
     id: 301,
@@ -221,5 +257,50 @@ export const products: Product[] = [
     color: "hsl(140, 20%, 40%)",
     image: "/painting.jfif",
     description: "Bring the outdoors in with this contemporary nature scene, perfect for creating a calming atmosphere."
+  },
+  {
+    id: 304,
+    name: "Modern Abstract Canvas",
+    price: 3500,
+    category: "Painting",
+    color: "hsl(200, 30%, 50%)",
+    image: "/painting.jfif",
+    description: "A vibrant abstract painting that brings life and color to any wall. Hand-painted with premium acrylics."
+  },
+  {
+    id: 305,
+    name: "Traditional Rajasthani Art",
+    price: 4800,
+    category: "Painting",
+    color: "hsl(30, 60%, 40%)",
+    image: "/painting.jfif",
+    description: "Exquisite traditional art from the heart of Rajasthan, showcasing rich heritage and intricate details."
+  },
+  {
+    id: 306,
+    name: "Contemporary Nature Scene",
+    price: 2900,
+    category: "Painting",
+    color: "hsl(140, 20%, 40%)",
+    image: "/painting.jfif",
+    description: "Bring the outdoors in with this contemporary nature scene, perfect for creating a calming atmosphere."
+  },
+  {
+    id: 307,
+    name: "Modern Abstract Canvas",
+    price: 3500,
+    category: "Painting",
+    color: "hsl(200, 30%, 50%)",
+    image: "/painting.jfif",
+    description: "A vibrant abstract painting that brings life and color to any wall. Hand-painted with premium acrylics."
+  },
+  {
+    id: 308,
+    name: "Traditional Rajasthani Art",
+    price: 4800,
+    category: "Painting",
+    color: "hsl(30, 60%, 40%)",
+    image: "/painting.jfif",
+    description: "Exquisite traditional art from the heart of Rajasthan, showcasing rich heritage and intricate details."
   }
 ];

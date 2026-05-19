@@ -1,10 +1,11 @@
-import { X, Minus, Plus, ShoppingBag, Truck, CreditCard, Tag, Sparkles } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Truck, CreditCard, Tag, Sparkles, LogIn } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { getApiUrl, authFetch } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const loadScript = (src: string) =>
   new Promise((resolve) => {
@@ -20,10 +21,39 @@ const loadScript = (src: string) =>
   });
 
 const CartDrawer = () => {
-  const { items, isOpen, setIsOpen, removeItem, updateQty, total, count } = useCart();
-  const { user, setIsAuthModalOpen } = useAuth();
+  const { items, isOpen, setIsOpen, removeItem, updateQty, total, count, clearCart } = useCart();
+  const { user, isAuthenticated, setIsAuthModalOpen } = useAuth();
+  const navigate = useNavigate();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const hasAddress = !!(user?.profile?.address?.trim() && user?.profile?.pincode?.trim());
+
+  const placeOrder = async (
+    paymentMethod: "cod" | "online",
+    razorpayOrderId?: string,
+    razorpayPaymentId?: string
+  ) => {
+    const orderItems = items.map((item) => ({
+      productId: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.qty,
+      image: item.image,
+    }));
+
+    await authFetch("/user-orders", {
+      method: "POST",
+      body: JSON.stringify({
+        items: orderItems,
+        paymentMethod,
+        razorpayOrderId,
+        razorpayPaymentId,
+      }),
+    });
+
+    clearCart();
+  };
 
   const handleCheckoutClick = () => {
     if (!user) {
@@ -32,16 +62,35 @@ const CartDrawer = () => {
       setIsAuthModalOpen(true);
       return;
     }
+    if (!hasAddress) {
+      toast.error("Please add your delivery address first");
+      setIsOpen(false);
+      navigate("/account?tab=address");
+      return;
+    }
     setShowPaymentModal(true);
   };
 
-  const handleCOD = () => {
-    toast.success("Order placed! Cash on Delivery selected. We'll contact you soon.");
-    setShowPaymentModal(false);
-    setIsOpen(false);
+  const handleCOD = async () => {
+    setIsProcessing(true);
+    try {
+      await placeOrder("cod");
+      toast.success("Order placed! Cash on Delivery selected. We'll contact you soon.");
+      setShowPaymentModal(false);
+      setIsOpen(false);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to place order");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleOnlinePayment = async () => {
+    if (!isAuthenticated || !user) {
+      setIsAuthModalOpen(true);
+      setShowPaymentModal(false);
+      return;
+    }
     setIsProcessing(true);
     const loaded = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
     if (!loaded) {
@@ -84,7 +133,12 @@ const CartDrawer = () => {
             });
             const verifyData = await verifyRes.json();
             if (verifyRes.ok && verifyData.success) {
-              toast.success(`Payment successful! ID: ${response.razorpay_payment_id}`);
+              try {
+                await placeOrder("online", response.razorpay_order_id, response.razorpay_payment_id);
+                toast.success(`Payment successful! Order confirmed.`);
+              } catch {
+                toast.success(`Payment received. Contact support if order is missing.`);
+              }
               setShowPaymentModal(false);
               setIsOpen(false);
             } else {
@@ -117,10 +171,17 @@ const CartDrawer = () => {
     }
   };
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setShowPaymentModal(false);
+    }
+  }, [isAuthenticated]);
+
   if (!isOpen) return null;
 
   const deliveryEstimate = total >= 999 ? "Free delivery" : "₹99 delivery";
   const savings = Math.round(total * 0.1);
+  const showLoginGate = !isAuthenticated;
 
   return (
     <>
@@ -171,7 +232,27 @@ const CartDrawer = () => {
 
         {/* Items */}
         <div className="flex-1 overflow-y-auto px-4 py-4">
-          {items.length === 0 ? (
+          {showLoginGate ? (
+            <div className="flex flex-col items-center justify-center h-full text-center px-6">
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <LogIn className="w-8 h-8 text-primary" />
+              </div>
+              <p className="font-display text-lg text-foreground/80 mb-1">Login required</p>
+              <p className="font-body text-sm text-muted-foreground mb-6">
+                Please log in to add items to your cart and checkout
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-body text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Log In to Continue
+              </button>
+            </div>
+          ) : items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center px-6">
               <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mb-4">
                 <ShoppingBag className="w-8 h-8 text-primary/30" />
@@ -245,7 +326,7 @@ const CartDrawer = () => {
         </div>
 
         {/* Footer */}
-        {items.length > 0 && !showPaymentModal && (
+        {isAuthenticated && items.length > 0 && !showPaymentModal && (
           <div className="border-t border-border/50 px-6 py-5 bg-gradient-to-t from-primary/[0.02] to-transparent space-y-3">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -287,7 +368,7 @@ const CartDrawer = () => {
         )}
 
         {/* Payment Method Selection */}
-        {showPaymentModal && (
+        {isAuthenticated && showPaymentModal && (
           <div className="border-t border-border/50 px-6 py-6 bg-background animate-in slide-in-from-bottom duration-200">
             <p className="font-display text-lg font-medium text-foreground mb-1">Choose Payment Method</p>
             <p className="font-body text-xs text-muted-foreground mb-5">
@@ -343,3 +424,4 @@ const CartDrawer = () => {
 };
 
 export default CartDrawer;
+

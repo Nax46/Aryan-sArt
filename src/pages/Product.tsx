@@ -22,7 +22,7 @@ const ProductPage = () => {
   const product = products.find(p => p.id === Number(id));
   const { addItem: addToCart, setIsOpen: setCartOpen } = useCart();
   const { isInWishlist, openSelectModal, removeFromAllCollections } = useWishlist();
-  const { user, setIsAuthModalOpen } = useAuth();
+  const { isAuthenticated, setIsAuthModalOpen } = useAuth();
 
   if (!product) {
     return <div className="min-h-screen bg-background pt-32 text-center">Product not found</div>;
@@ -31,7 +31,7 @@ const ProductPage = () => {
   const isWished = isInWishlist(product.id.toString());
 
   const handleToggleWishlist = () => {
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
@@ -48,7 +48,7 @@ const ProductPage = () => {
   };
 
   const handleAddToCart = () => {
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
@@ -63,7 +63,7 @@ const ProductPage = () => {
   };
 
   const handleBuyNow = () => {
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }

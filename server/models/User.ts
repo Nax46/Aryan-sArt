@@ -12,7 +12,9 @@ export interface IUser extends Document {
     avatar?: string;
     address?: string;
     city?: string;
+    state?: string;
     pincode?: string;
+    landmark?: string;
   };
   createdAt: Date;
   comparePassword: (candidatePassword: string) => Promise<boolean>;
@@ -34,7 +36,9 @@ const UserSchema: Schema = new Schema({
     avatar: { type: String, default: '' },
     address: { type: String, default: '' },
     city: { type: String, default: '' },
-    pincode: { type: String, default: '' }
+    state: { type: String, default: '' },
+    pincode: { type: String, default: '' },
+    landmark: { type: String, default: '' },
   }
 }, { timestamps: true });
 

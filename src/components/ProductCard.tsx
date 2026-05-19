@@ -14,12 +14,12 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem: addToCart, setIsOpen: setCartOpen } = useCart();
   const { isInWishlist, openSelectModal, removeFromAllCollections } = useWishlist();
-  const { user, setIsAuthModalOpen } = useAuth();
+  const { isAuthenticated, setIsAuthModalOpen } = useAuth();
   const isWished = isInWishlist(product.id.toString());
   const navigate = useNavigate();
 
   const handleWishlistClick = () => {
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
@@ -37,7 +37,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
@@ -52,7 +52,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }

@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, Package, LogOut, LogIn, Menu, X } from "lucide-react";
+import { Search, Heart, ShoppingBag, User, Package, LogOut, LogIn, Menu, X, MapPin } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -144,13 +144,26 @@ const Navbar = () => {
                   <DropdownMenuContent align="end" className="w-56 font-body bg-white border-[#7E1E1E]/10 rounded-lg p-1">
                     <DropdownMenuLabel className="font-semibold text-[#7E1E1E] px-2 py-1.5">My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-[#7E1E1E]/5" />
-                    <DropdownMenuItem className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md">
+                    <DropdownMenuItem
+                      className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md"
+                      onClick={() => navigate("/account?tab=profile")}
+                    >
                       <User className="mr-2 h-4 w-4" />
                       <span>My Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md">
+                    <DropdownMenuItem
+                      className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md"
+                      onClick={() => navigate("/account?tab=orders")}
+                    >
                       <Package className="mr-2 h-4 w-4" />
                       <span>Orders</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md"
+                      onClick={() => navigate("/account?tab=address")}
+                    >
+                      <MapPin className="mr-2 h-4 w-4" />
+                      <span>Address</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md" onClick={() => setWishlistOpen(true)}>
                       <Heart className="mr-2 h-4 w-4" />
@@ -271,6 +284,14 @@ const Navbar = () => {
               >
                 <ShoppingBag className="w-4 h-4" /> Home
               </a>
+              {isAuthenticated && (
+                <button
+                  onClick={() => { navigate("/account"); setMobileMenuOpen(false); }}
+                  className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors w-full text-left"
+                >
+                  <User className="w-4 h-4" /> My Account
+                </button>
+              )}
               <button
                 onClick={() => { setWishlistOpen(true); setMobileMenuOpen(false); }}
                 className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors w-full text-left"

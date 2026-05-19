@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -63,22 +62,12 @@ const Blog = () => {
             />
           </div>
           <div className="relative z-10 text-center px-4 max-w-3xl mx-auto mt-8">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
-            >
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 animate-in fade-in slide-in-from-bottom-6 duration-1000 fill-mode-both">
               The Art Journal
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-body text-white/80 text-lg md:text-xl"
-            >
+            </h1>
+            <p className="font-body text-white/80 text-lg md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 fill-mode-both">
               Stories, insights, and inspiration from the world of canvas and creativity.
-            </motion.p>
+            </p>
           </div>
         </div>
 
@@ -86,13 +75,10 @@ const Blog = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
             {blogPosts.map((post, index) => (
-              <motion.article 
+              <article 
                 key={post.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group cursor-pointer flex flex-col h-full"
+                className="group cursor-pointer flex flex-col h-full animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
+                style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl mb-6 shadow-md">
                   <div className="absolute inset-0 bg-[#7E1E1E]/20 mix-blend-multiply z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -132,7 +118,7 @@ const Blog = () => {
                     </span>
                   </div>
                 </div>
-              </motion.article>
+              </article>
             ))}
           </div>
           

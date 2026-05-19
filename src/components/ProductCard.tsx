@@ -1,10 +1,11 @@
-import { Heart, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { Product } from "@/lib/data";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
+import WishlistHeart from "@/components/WishlistHeart";
 
 interface ProductCardProps {
   product: Product;
@@ -12,90 +13,87 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem: addToCart, setIsOpen: setCartOpen } = useCart();
-  const { isInWishlist, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlist();
-  const { user, setIsAuthModalOpen } = useAuth();
+  const { isInWishlist, openSelectModal, removeFromAllCollections } = useWishlist();
+  const { isAuthenticated, setIsAuthModalOpen } = useAuth();
   const isWished = isInWishlist(product.id.toString());
   const navigate = useNavigate();
 
-  const handleWishlistClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!user) {
+  const handleWishlistClick = () => {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
     if (isWished) {
-      removeFromWishlist(product.id.toString());
+      removeFromAllCollections(product.id.toString());
     } else {
-      addToWishlist({ 
-        id: product.id.toString(), 
-        name: product.name, 
-        price: product.price, 
-        image: product.image 
+      openSelectModal({
+        productId: product.id.toString(),
+        name: product.name,
+        price: product.price,
+        image: product.image,
       });
     }
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
-    addToCart({ 
-      id: product.id, 
-      name: product.name, 
+    addToCart({
+      id: product.id,
+      name: product.name,
       price: product.price,
-      image: product.image
+      image: product.image,
     });
     toast.success("Added to cart");
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
+    if (!isAuthenticated) {
       setIsAuthModalOpen(true);
       return;
     }
-    addToCart({ 
-      id: product.id, 
-      name: product.name, 
+    addToCart({
+      id: product.id,
+      name: product.name,
       price: product.price,
-      image: product.image
+      image: product.image,
     });
     setCartOpen(true);
   };
 
   const handleNavigateToDetail = () => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, behavior: "instant" });
     navigate(`/product/${product.id}`);
   };
 
   return (
-    <div 
+    <div
       onClick={handleNavigateToDetail}
       className="group relative bg-white border border-border/40 hover:shadow-xl transition-all duration-500 rounded-sm p-3 cursor-pointer h-full flex flex-col"
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-sm mb-4 bg-[#F9F7F5]">
         {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.name} 
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+          <img
+            src={product.image}
+            alt={product.name}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center opacity-20" style={{ backgroundColor: product.color }}>
+          <div
+            className="absolute inset-0 flex items-center justify-center opacity-20"
+            style={{ backgroundColor: product.color }}
+          >
             <div className="w-20 h-20 rounded-full blur-2xl" style={{ backgroundColor: product.color }} />
           </div>
         )}
-        
-        <button
-          onClick={handleWishlistClick}
-          className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all z-10"
-        >
-          <Heart
-            className={`w-4 h-4 transition-colors ${isWished ? "fill-primary text-primary" : "text-muted-foreground"}`}
-          />
-        </button>
+
+        <div className="absolute top-3 right-3 z-10">
+          <WishlistHeart isWished={isWished} onClick={handleWishlistClick} size="sm" />
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col px-1">
@@ -105,14 +103,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <h3 className="font-body text-sm font-medium text-foreground leading-tight mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
           {product.name}
         </h3>
-        
+
         <div className="mt-auto">
           <div className="flex items-center justify-between mb-4">
             <p className="font-body text-base font-semibold text-foreground">
               ₹{product.price.toLocaleString("en-IN")}
             </p>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleAddToCart}

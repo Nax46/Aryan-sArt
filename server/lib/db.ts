@@ -31,9 +31,12 @@ async function connectDB() {
       socketTimeoutMS: 45000,
     };
 
-    console.log('Connecting to MongoDB Atlas...');
-    cached.promise = mongoose.connect(MONGO_URI, opts)
-      .then((mongoose) => {
+    if (!MONGO_URI) {
+      console.error('❌ MONGO_URI is missing. Cannot connect to DB.');
+      cached.promise = Promise.reject(new Error('MONGO_URI is missing'));
+    } else {
+      cached.promise = mongoose.connect(MONGO_URI, opts)
+        .then((mongoose) => {
         console.log('✅ Successfully connected to MongoDB Atlas');
         return mongoose;
       })
@@ -45,6 +48,7 @@ async function connectDB() {
         });
         return null;
       });
+    }
   }
 
   try {

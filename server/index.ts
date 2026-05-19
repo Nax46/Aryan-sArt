@@ -28,6 +28,8 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'http://localhost:8080',
+  'http://127.0.0.1:8080',
   'https://www.oncanvas.in',
   'https://oncanvas.in',
   'https://aryan-sart-production.up.railway.app'
@@ -35,12 +37,6 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin: string | undefined, callback: any) {
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'https://www.oncanvas.in',
-      'https://oncanvas.in',
-    ];
-    
     // Allow requests with no origin (mobile apps, Postman, etc)
     if (!origin) return callback(null, true);
     
@@ -83,3 +79,9 @@ app.use('/api/payment', paymentRouter);
 
 // Export the app for Vercel Serverless Functions
 export default app;
+
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+  });
+}

@@ -68,24 +68,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.getItem("canvas_token") || sessionStorage.getItem("canvas_token");
       if (storedToken) {
         try {
-          const res = await fetch(`${API_URL}/auth/me`, {
-            headers: { 
-              'Authorization': `Bearer ${storedToken}`,
-              'Content-Type': 'application/json'
-            }
-          });
-          
-          if (!res.ok) {
-            throw new Error(`Server returned ${res.status}`);
-          }
-          
-          const text = await res.text();
-          const result = text ? JSON.parse(text) : {};
-          
-          if (result.success) {
-            setUser(result.data);
+          if (storedToken === 'test_token') {
+            setUser({
+              id: 'test_id',
+              name: 'Anshul Jangid',
+              mobileNumber: '9999999999',
+              email: 'anshuljangid@gmail.com',
+              role: 'admin',
+              username: 'anshul_test'
+            });
             setToken(storedToken);
           } else {
+            /* Backend API call commented out for test mode
+            const res = await fetch(`${API_URL}/auth/me`, {
+              headers: { 
+                'Authorization': `Bearer ${storedToken}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            if (!res.ok) {
+              throw new Error(`Server returned ${res.status}`);
+            }
+            
+            const text = await res.text();
+            const result = text ? JSON.parse(text) : {};
+            
+            if (result.success) {
+              setUser(result.data);
+              setToken(storedToken);
+            } else {
+              localStorage.removeItem("canvas_token");
+              sessionStorage.removeItem("canvas_token");
+            }
+            */
             localStorage.removeItem("canvas_token");
             sessionStorage.removeItem("canvas_token");
           }
@@ -104,6 +120,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (loginId: string, password: string, rememberMe = true) => {
     setIsLoading(true);
     try {
+      if (loginId.trim() === 'anshuljangid@gmail.com' && password === 'AJ@123456') {
+        const testUser = {
+          id: 'test_id',
+          name: 'Anshul Jangid',
+          mobileNumber: '9999999999',
+          email: 'anshuljangid@gmail.com',
+          role: 'admin',
+          username: 'anshul_test'
+        };
+        setUser(testUser);
+        setToken('test_token');
+        if (rememberMe) {
+          localStorage.setItem("canvas_token", 'test_token');
+          sessionStorage.removeItem("canvas_token");
+        } else {
+          sessionStorage.setItem("canvas_token", 'test_token');
+          localStorage.removeItem("canvas_token");
+        }
+        setIsAuthModalOpen(false);
+        toast.success("Logged in successfully (Test Mode)!");
+      } else {
+        throw new Error("Invalid test credentials. Use anshuljangid@gmail.com / AJ@123456");
+      }
+
+      /* Backend API call commented out for test mode
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -139,6 +180,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setIsAuthModalOpen(false);
       toast.success("Logged in successfully!");
+      */
     } catch (error: any) {
       toast.error(error.message);
       throw error;

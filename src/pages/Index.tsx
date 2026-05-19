@@ -28,7 +28,7 @@ const Index = () => {
       <Footer />
       <CartDrawer />
       <WishlistDrawer />
-      <WhatsAppButton />
+      {/*<WhatsAppButton />*/}
       <AuthModal />
     </div>
   );

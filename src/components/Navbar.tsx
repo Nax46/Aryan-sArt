@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, Package, LogOut, LogIn, Menu, X, BookOpen } from "lucide-react";
+import { Search, Heart, ShoppingBag, User, Package, LogOut, LogIn, Menu, X, BookOpen, MapPin } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import { useNavigate, Link } from "react-router-dom";
 const Navbar = () => {
   const { count, setIsOpen } = useCart();
   const { user, logout, setIsAuthModalOpen, isAuthenticated } = useAuth();
-  const { items: wishlistItems, setIsOpen: setWishlistOpen } = useWishlist();
+  const { totalItemCount, setIsOpen: setWishlistOpen } = useWishlist();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -149,13 +149,26 @@ const Navbar = () => {
                   <DropdownMenuContent align="end" className="w-56 font-body bg-white border-[#7E1E1E]/10 rounded-lg p-1">
                     <DropdownMenuLabel className="font-semibold text-[#7E1E1E] px-2 py-1.5">My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-[#7E1E1E]/5" />
-                    <DropdownMenuItem className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md">
+                    <DropdownMenuItem
+                      className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md"
+                      onClick={() => navigate("/account?tab=profile")}
+                    >
                       <User className="mr-2 h-4 w-4" />
                       <span>My Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md">
+                    <DropdownMenuItem
+                      className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md"
+                      onClick={() => navigate("/account?tab=orders")}
+                    >
                       <Package className="mr-2 h-4 w-4" />
                       <span>Orders</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md"
+                      onClick={() => navigate("/account?tab=address")}
+                    >
+                      <MapPin className="mr-2 h-4 w-4" />
+                      <span>Address</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer text-[#7E1E1E]/80 focus:bg-[#7E1E1E]/5 focus:text-[#7E1E1E] rounded-md" onClick={() => setWishlistOpen(true)}>
                       <Heart className="mr-2 h-4 w-4" />
@@ -184,9 +197,9 @@ const Navbar = () => {
                 className="relative text-[#7E1E1E]/80 hover:text-[#7E1E1E] transition-colors p-1"
               >
                 <Heart className="w-5 h-5" />
-                {wishlistItems.length > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                    {wishlistItems.length}
+                {totalItemCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[8px] font-bold min-w-[14px] h-[14px] px-0.5 rounded-full flex items-center justify-center animate-in zoom-in duration-200">
+                    {totalItemCount}
                   </span>
                 )}
               </button>
@@ -283,14 +296,22 @@ const Navbar = () => {
               >
                 <BookOpen className="w-4 h-4" /> Blog
               </Link>
+              {isAuthenticated && (
+                <button
+                  onClick={() => { navigate("/account"); setMobileMenuOpen(false); }}
+                  className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors w-full text-left"
+                >
+                  <User className="w-4 h-4" /> My Account
+                </button>
+              )}
               <button
                 onClick={() => { setWishlistOpen(true); setMobileMenuOpen(false); }}
                 className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors w-full text-left"
               >
                 <Heart className="w-4 h-4" /> Wishlist
-                {wishlistItems.length > 0 && (
-                  <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                    {wishlistItems.length}
+                {totalItemCount > 0 && (
+                  <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    {totalItemCount}
                   </span>
                 )}
               </button>

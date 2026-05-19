@@ -9,6 +9,8 @@ import ordersRouter from './routes/orders';
 import customOrdersRouter from './routes/custom_orders';
 import authRouter from './routes/auth';
 import paymentRouter from './routes/payment';
+import wishlistRouter from './routes/wishlist';
+import userOrdersRouter from './routes/userOrders';
 
 import connectDB from './lib/db';
 
@@ -76,6 +78,8 @@ app.use('/api/orders', ordersRouter);
 app.use('/api/custom-orders', customOrdersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/payment', paymentRouter);
+app.use('/api/wishlists', wishlistRouter);
+app.use('/api/user-orders', userOrdersRouter);
 
 // Export the app for Vercel Serverless Functions
 export default app;

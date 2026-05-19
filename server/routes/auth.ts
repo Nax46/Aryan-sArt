@@ -11,7 +11,12 @@ const generateToken = (userId: any) => {
   if (!JWT_SECRET) {
     console.error('JWT_SECRET is missing!');
   }
-  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ id: String(userId) }, JWT_SECRET, { expiresIn: '7d' });
+};
+
+const resolveUserId = (req: AuthRequest) => {
+  const decoded = req.user || {};
+  return String(decoded.id || decoded._id || decoded.userId || '');
 };
 
 // @route POST /api/auth/signup
@@ -38,8 +43,8 @@ router.post('/signup', async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Please provide a valid 10-digit Indian mobile number" });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
     }
 
     // Check if user exists
@@ -91,26 +96,30 @@ router.post('/login', async (req: Request, res: Response) => {
       });
     }
     
-    let { mobileNumber, loginId, password } = req.body;
-    
-    const identifier = (loginId || mobileNumber || "").trim();
-    const pWord = (password || "").trim();
+    let { loginId, mobileNumber: mNum, password: pWord } = req.body;
+    const loginIdentifier = (loginId || mNum || '').trim();
+    const password = (pWord || '').trim();
 
-    if (!identifier || !pWord) {
-      return res.status(400).json({ success: false, message: "Please provide email/mobile and password" });
+    if (!loginIdentifier || !password) {
+      return res.status(400).json({ success: false, message: "Please provide mobile/email and password" });
     }
 
-    const isEmail = identifier.includes('@');
-    const query = isEmail ? { email: identifier } : { mobileNumber: identifier };
-
-    const user = await User.findOne(query);
+    const user = loginIdentifier.includes('@')
+      ? await User.findOne({ email: loginIdentifier.toLowerCase() }).select('+password')
+      : await User.findOne({ mobileNumber: loginIdentifier.replace(/\D/g, '').slice(-10) }).select('+password');
     if (!user) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    const isMatch = await user.comparePassword(pWord);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    // Migrate legacy plain-text password to bcrypt hash
+    if (user.password && !/^\$2[aby]\$\d{2}\$/.test(user.password)) {
+      user.password = password;
+      await user.save();
     }
 
     const token = generateToken(user._id);
@@ -136,6 +145,15 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 });
 
+const formatUserResponse = (user: any) => {
+  const userObj = user.toObject ? user.toObject() : user;
+  delete userObj.password;
+  return {
+    ...userObj,
+    id: userObj._id?.toString() || userObj.id,
+  };
+};
+
 // @route GET /api/auth/me
 router.get('/me', verifyToken, async (req: AuthRequest, res: Response) => {
   try {
@@ -146,14 +164,19 @@ router.get('/me', verifyToken, async (req: AuthRequest, res: Response) => {
         message: "Database connection unavailable. Please check your MONGO_URI in server/.env." 
       });
     }
-    const user = await User.findById(req.user.id).select('-password');
+    const userId = resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Invalid token payload' });
+    }
+
+    const user = await User.findById(userId).select('-password');
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
     res.status(200).json({
       success: true,
-      data: user,
+      data: formatUserResponse(user),
       message: "User profile fetched"
     });
   } catch (error: any) {
@@ -161,5 +184,133 @@ router.get('/me', verifyToken, async (req: AuthRequest, res: Response) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+// @route PATCH /api/auth/profile
+router.patch('/profile', verifyToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const db = await connectDB();
+    if (!db) {
+      return res.status(503).json({ success: false, message: 'Database unavailable' });
+    }
+
+    const userId = resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Invalid token. Please log in again.' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const { name, email, profile } = req.body;
+
+    if (name?.trim()) user.name = name.trim();
+    if (email !== undefined) {
+      const trimmedEmail = email?.trim().toLowerCase() || '';
+      if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+        return res.status(400).json({ success: false, message: 'Invalid email address' });
+      }
+      if (trimmedEmail) {
+        const emailTaken = await User.findOne({ email: trimmedEmail, _id: { $ne: user._id } });
+        if (emailTaken) {
+          return res.status(409).json({ success: false, message: 'Email already in use' });
+        }
+      }
+      user.email = trimmedEmail;
+    }
+
+    if (profile) {
+      if (profile.avatar !== undefined) user.profile.avatar = profile.avatar;
+      if (profile.address !== undefined) user.profile.address = profile.address.trim();
+      if (profile.city !== undefined) user.profile.city = profile.city.trim();
+      if (profile.state !== undefined) user.profile.state = profile.state.trim();
+      if (profile.pincode !== undefined) {
+        const pin = profile.pincode.replace(/\D/g, '').slice(0, 6);
+        if (pin && pin.length !== 6) {
+          return res.status(400).json({ success: false, message: 'Pincode must be 6 digits' });
+        }
+        user.profile.pincode = pin;
+      }
+      if (profile.landmark !== undefined) user.profile.landmark = profile.landmark.trim();
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      data: formatUserResponse(user),
+      message: 'Profile updated successfully',
+    });
+  } catch (error: any) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ success: false, message: error.message || 'Internal server error' });
+  }
+});
+
+const changePasswordHandler = async (req: AuthRequest, res: Response) => {
+  try {
+    const db = await connectDB();
+    if (!db) {
+      return res.status(503).json({ success: false, message: 'Database unavailable' });
+    }
+
+    const userId = resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Invalid token. Please log in again.' });
+    }
+
+    const currentPassword = String(req.body.currentPassword || '').trim();
+    const newPassword = String(req.body.newPassword || '').trim();
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Current and new password are required' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 8 characters' });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ success: false, message: 'New password must be different from current password' });
+    }
+
+    const user = await User.findById(userId).select('+password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (!user.password) {
+      return res.status(500).json({
+        success: false,
+        message: 'Password record missing. Please contact support.',
+      });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ success: true, message: 'Password changed successfully' });
+  } catch (error: any) {
+    console.error('Change password error:', error);
+
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid user session. Please log in again.' });
+    }
+
+    res.status(500).json({ success: false, message: error.message || 'Internal server error' });
+  }
+};
+
+// @route PUT /api/auth/password
+router.put('/password', verifyToken, changePasswordHandler);
+
+// @route POST /api/auth/change-password (alias for clients that block PUT)
+router.post('/change-password', verifyToken, changePasswordHandler);
 
 export default router;

@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const { count, setIsOpen } = useCart();
   const { user, logout, setIsAuthModalOpen, isAuthenticated } = useAuth();
-  const { items: wishlistItems, setIsOpen: setWishlistOpen } = useWishlist();
+  const { totalItemCount, setIsOpen: setWishlistOpen } = useWishlist();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -179,9 +179,9 @@ const Navbar = () => {
                 className="relative text-[#7E1E1E]/80 hover:text-[#7E1E1E] transition-colors p-1"
               >
                 <Heart className="w-5 h-5" />
-                {wishlistItems.length > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                    {wishlistItems.length}
+                {totalItemCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[8px] font-bold min-w-[14px] h-[14px] px-0.5 rounded-full flex items-center justify-center animate-in zoom-in duration-200">
+                    {totalItemCount}
                   </span>
                 )}
               </button>
@@ -276,9 +276,9 @@ const Navbar = () => {
                 className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors w-full text-left"
               >
                 <Heart className="w-4 h-4" /> Wishlist
-                {wishlistItems.length > 0 && (
-                  <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                    {wishlistItems.length}
+                {totalItemCount > 0 && (
+                  <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    {totalItemCount}
                   </span>
                 )}
               </button>

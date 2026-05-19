@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+import WishlistSelectModal from "@/components/WishlistSelectModal";
 import Index from "./pages/Index";
 import ProductPage from "./pages/Product";
 import CategoryPage from "./pages/CategoryPage";
@@ -22,6 +23,7 @@ const App = () => (
           <WishlistProvider>
             <Toaster />
             <Sonner />
+            <WishlistSelectModal />
             <BrowserRouter>
               <ScrollToTop />
               <Routes>

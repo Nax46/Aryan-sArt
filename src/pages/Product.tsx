@@ -6,12 +6,13 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import MarqueeStrip from "@/components/MarqueeStrip";
 import TrustStrip from "@/components/TrustStrip";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { Heart, ShoppingBag, Truck, Shield, RotateCcw } from "lucide-react";
+import { ShoppingBag, Truck, Shield, RotateCcw } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
+import WishlistHeart from "@/components/WishlistHeart";
 import AuthModal from "@/components/AuthModal";
 import { toast } from "sonner";
 
@@ -20,7 +21,7 @@ const ProductPage = () => {
   const navigate = useNavigate();
   const product = products.find(p => p.id === Number(id));
   const { addItem: addToCart, setIsOpen: setCartOpen } = useCart();
-  const { isInWishlist, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlist();
+  const { isInWishlist, openSelectModal, removeFromAllCollections } = useWishlist();
   const { user, setIsAuthModalOpen } = useAuth();
 
   if (!product) {
@@ -35,13 +36,13 @@ const ProductPage = () => {
       return;
     }
     if (isWished) {
-      removeFromWishlist(product.id.toString());
+      removeFromAllCollections(product.id.toString());
     } else {
-      addToWishlist({ 
-        id: product.id.toString(), 
-        name: product.name, 
-        price: product.price, 
-        image: product.image 
+      openSelectModal({
+        productId: product.id.toString(),
+        name: product.name,
+        price: product.price,
+        image: product.image,
       });
     }
   };
@@ -90,12 +91,14 @@ const ProductPage = () => {
               ) : (
                 <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: product.color, opacity: 0.5 }} />
               )}
-              <button 
-                onClick={handleToggleWishlist}
-                className="absolute top-4 right-4 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors"
-              >
-                <Heart className={`w-5 h-5 ${isWished ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
-              </button>
+              <div className="absolute top-4 right-4 z-10">
+                <WishlistHeart
+                  isWished={isWished}
+                  onClick={handleToggleWishlist}
+                  size="md"
+                  buttonClassName="p-3"
+                />
+              </div>
             </div>
           </div>
 

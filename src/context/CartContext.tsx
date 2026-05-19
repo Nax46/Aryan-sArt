@@ -18,11 +18,11 @@ interface CartContextType {
   setIsOpen: (open: boolean) => void;
   total: number;
   count: number;
-  wishlist: number[];
-  toggleWishlist: (id: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
+const STORAGE_KEY = "canvas_cart";
 
 export const useCart = () => {
   const ctx = useContext(CartContext);
@@ -33,45 +33,80 @@ export const useCart = () => {
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [wishlist, setWishlist] = useState<number[]>([]);
-
   const { user, setIsAuthModalOpen } = useAuth();
 
-  const addItem = useCallback((item: Omit<CartItem, "qty">) => {
-    if (!user) {
-      setIsAuthModalOpen(true);
-      return;
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        setItems(JSON.parse(stored));
+      } catch {
+        /* ignore */
+      }
     }
-    setItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
-      if (existing) return prev.map((i) => (i.id === item.id ? { ...i, qty: i.qty + 1 } : i));
-      return [...prev, { ...item, qty: 1 }];
-    });
-    setIsOpen(true);
-  }, [user, setIsAuthModalOpen]);
-
-  const removeItem = useCallback((id: number) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
 
-  const updateQty = useCallback((id: number, qty: number) => {
-    if (qty < 1) return;
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
+  const saveItems = useCallback((newItems: CartItem[]) => {
+    setItems(newItems);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
   }, []);
 
-  const toggleWishlist = useCallback((id: number) => {
-    if (!user) {
-      setIsAuthModalOpen(true);
-      return;
-    }
-    setWishlist((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
-  }, [user, setIsAuthModalOpen]);
+  const addItem = useCallback(
+    (item: Omit<CartItem, "qty">) => {
+      if (!user) {
+        setIsAuthModalOpen(true);
+        return;
+      }
+      setItems((prev) => {
+        const existing = prev.find((i) => i.id === item.id);
+        const updated = existing
+          ? prev.map((i) => (i.id === item.id ? { ...i, qty: i.qty + 1 } : i))
+          : [...prev, { ...item, qty: 1 }];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
+      setIsOpen(true);
+    },
+    [user, setIsAuthModalOpen]
+  );
+
+  const removeItem = useCallback(
+    (id: number) => {
+      setItems((prev) => {
+        const updated = prev.filter((i) => i.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
+    },
+    []
+  );
+
+  const updateQty = useCallback(
+    (id: number, qty: number) => {
+      if (qty < 1) {
+        removeItem(id);
+        return;
+      }
+      setItems((prev) => {
+        const updated = prev.map((i) => (i.id === id ? { ...i, qty } : i));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
+    },
+    [removeItem]
+  );
+
+  const clearCart = useCallback(() => {
+    saveItems([]);
+  }, [saveItems]);
 
   const total = items.reduce((s, i) => s + i.price * i.qty, 0);
   const count = items.reduce((s, i) => s + i.qty, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQty, isOpen, setIsOpen, total, count, wishlist, toggleWishlist }}>
+    <CartContext.Provider
+      value={{ items, addItem, removeItem, updateQty, isOpen, setIsOpen, total, count, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

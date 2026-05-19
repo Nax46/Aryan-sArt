@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, Package, LogOut, LogIn, Menu, X } from "lucide-react";
+import { Search, Heart, ShoppingBag, User, Package, LogOut, LogIn, Menu, X, BookOpen } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useState, useMemo } from "react";
 import { products } from "@/lib/data";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Navbar = () => {
   const { count, setIsOpen } = useCart();
@@ -122,10 +122,15 @@ const Navbar = () => {
 
             {/* Right icons */}
             <div className="flex items-center gap-2 sm:gap-5 font-body text-sm">
-              {/* Shop link — desktop */}
-              <a href="#arrivals" className="hidden md:block text-[#7E1E1E]/80 hover:text-[#7E1E1E] transition-colors font-medium">
-                Shop
-              </a>
+              {/* Links — desktop */}
+              <div className="hidden md:flex items-center gap-6 mr-2">
+                <a href="/#arrivals" className="text-[#7E1E1E]/80 hover:text-[#7E1E1E] transition-colors font-medium">
+                  Shop
+                </a>
+                <Link to="/blog" className="text-[#7E1E1E]/80 hover:text-[#7E1E1E] transition-colors font-medium">
+                  Blog
+                </Link>
+              </div>
 
               {/* User / Login */}
               {isAuthenticated ? (
@@ -271,6 +276,13 @@ const Navbar = () => {
               >
                 <ShoppingBag className="w-4 h-4" /> Home
               </a>
+              <Link
+                to="/blog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors"
+              >
+                <BookOpen className="w-4 h-4" /> Blog
+              </Link>
               <button
                 onClick={() => { setWishlistOpen(true); setMobileMenuOpen(false); }}
                 className="flex items-center gap-3 px-3 py-2.5 text-[#7E1E1E] font-medium rounded-lg hover:bg-[#7E1E1E]/5 transition-colors w-full text-left"

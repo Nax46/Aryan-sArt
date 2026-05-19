@@ -21,7 +21,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     if (!db) {
       return res.status(503).json({ 
         success: false, 
-        message: "Database connection unavailable. Please ensure your MONGO_URI is set in Railway and MongoDB Atlas allows connections from Railway (IP Whitelist: 0.0.0.0/0)." 
+        message: "Database connection unavailable. Please check your MONGO_URI in server/.env." 
       });
     }
     let { name, mobileNumber, password, email } = req.body;
@@ -87,26 +87,30 @@ router.post('/login', async (req: Request, res: Response) => {
     if (!db) {
       return res.status(503).json({ 
         success: false, 
-        message: "Database connection unavailable. Please ensure your MongoDB Atlas IP whitelist allows Vercel (0.0.0.0/0)." 
+        message: "Database connection unavailable. Please check your MONGO_URI in server/.env." 
       });
     }
     
-    let { mobileNumber: mNum, password: pWord } = req.body;
-    const mobileNumber = mNum.trim();
-    const password = pWord.trim();
+    let { mobileNumber, loginId, password } = req.body;
+    
+    const identifier = (loginId || mobileNumber || "").trim();
+    const pWord = (password || "").trim();
 
-    if (!mobileNumber || !password) {
-      return res.status(400).json({ success: false, message: "Please provide mobile number and password" });
+    if (!identifier || !pWord) {
+      return res.status(400).json({ success: false, message: "Please provide email/mobile and password" });
     }
 
-    const user = await User.findOne({ mobileNumber });
+    const isEmail = identifier.includes('@');
+    const query = isEmail ? { email: identifier } : { mobileNumber: identifier };
+
+    const user = await User.findOne(query);
     if (!user) {
-      return res.status(401).json({ success: false, message: "Invalid mobile or password" });
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await user.comparePassword(pWord);
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: "Invalid mobile or password" });
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
     const token = generateToken(user._id);
@@ -135,6 +139,13 @@ router.post('/login', async (req: Request, res: Response) => {
 // @route GET /api/auth/me
 router.get('/me', verifyToken, async (req: AuthRequest, res: Response) => {
   try {
+    const db = await connectDB();
+    if (!db) {
+      return res.status(503).json({ 
+        success: false, 
+        message: "Database connection unavailable. Please check your MONGO_URI in server/.env." 
+      });
+    }
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });

@@ -223,11 +223,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const changePassword = async (currentPassword: string, newPassword: string) => {
+    const current = currentPassword.trim();
+    const next = newPassword.trim();
+
+    if (!current || !next) {
+      throw new Error("Please fill in all password fields");
+    }
+    if (next.length < 8) {
+      throw new Error("New password must be at least 8 characters");
+    }
+    if (current === next) {
+      throw new Error("New password must be different from current password");
+    }
+
     try {
-      await authFetch("/auth/password", {
-        method: "PUT",
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
+      try {
+        await authFetch("/auth/password", {
+          method: "PUT",
+          body: JSON.stringify({ currentPassword: current, newPassword: next }),
+        });
+      } catch (putError: any) {
+        // Fallback if PUT is blocked by proxy
+        if (putError.message?.includes("404") || putError.message?.includes("405")) {
+          await authFetch("/auth/change-password", {
+            method: "POST",
+            body: JSON.stringify({ currentPassword: current, newPassword: next }),
+          });
+        } else {
+          throw putError;
+        }
+      }
       toast.success("Password changed successfully!");
     } catch (error: any) {
       toast.error(error.message);

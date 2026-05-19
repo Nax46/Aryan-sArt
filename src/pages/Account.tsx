@@ -161,6 +161,7 @@ const AccountPage = () => {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -222,13 +223,38 @@ const AccountPage = () => {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword || newPassword.length < 6) return;
+    setPasswordError("");
+
+    const current = currentPassword.trim();
+    const next = newPassword.trim();
+    const confirm = confirmPassword.trim();
+
+    if (!current || !next || !confirm) {
+      setPasswordError("Please fill in all password fields");
+      return;
+    }
+    if (next.length < 8) {
+      setPasswordError("New password must be at least 8 characters");
+      return;
+    }
+    if (next !== confirm) {
+      setPasswordError("New password and confirm password do not match");
+      return;
+    }
+    if (current === next) {
+      setPasswordError("New password must be different from current password");
+      return;
+    }
+
     setPasswordSaving(true);
     try {
-      await changePassword(currentPassword, newPassword);
+      await changePassword(current, next);
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      setPasswordError("");
+    } catch (error: any) {
+      setPasswordError(error.message || "Failed to change password");
     } finally {
       setPasswordSaving(false);
     }
@@ -521,13 +547,26 @@ const AccountPage = () => {
                     onToggle={() => setShowNew(!showNew)}
                     required
                   />
-                  {confirmPassword && newPassword !== confirmPassword && (
+                  {passwordError && (
+                    <p className="text-xs text-destructive font-body bg-destructive/5 border border-destructive/20 rounded-lg px-3 py-2">
+                      {passwordError}
+                    </p>
+                  )}
+                  {confirmPassword && newPassword !== confirmPassword && !passwordError && (
                     <p className="text-xs text-destructive">Passwords do not match</p>
                   )}
+                  <p className="text-[11px] text-muted-foreground font-body">
+                    Use at least 8 characters with letters and numbers for a strong password.
+                  </p>
                   <SaveButton
                     loading={passwordSaving}
                     label="Update Password"
-                    disabled={newPassword !== confirmPassword || newPassword.length < 6}
+                    disabled={
+                      !currentPassword.trim() ||
+                      !newPassword.trim() ||
+                      newPassword !== confirmPassword ||
+                      newPassword.length < 8
+                    }
                   />
                 </form>
               </div>

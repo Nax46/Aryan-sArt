@@ -27,10 +27,23 @@ export const authFetch = async (path: string, options: RequestInit = {}) => {
 
   const res = await fetch(`${getApiUrl()}${path}`, { ...options, headers });
   const text = await res.text();
-  const data = text ? JSON.parse(text) : {};
+
+  let data: Record<string, unknown> = {};
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      const snippet = text.replace(/<[^>]+>/g, '').trim().slice(0, 120);
+      throw new Error(snippet || `Server error (${res.status})`);
+    }
+  }
 
   if (!res.ok) {
-    throw new Error(data.message || `Request failed (${res.status})`);
+    throw new Error(
+      (typeof data.message === 'string' && data.message) ||
+        (typeof data.error === 'string' && data.error) ||
+        `Request failed (${res.status})`
+    );
   }
 
   return data;

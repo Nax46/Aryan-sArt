@@ -1,9 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { products } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
-import Navbar from "@/components/Navbar";
+import FixedSiteHeader from "@/components/layout/FixedSiteHeader";
+import HeaderSpacer from "@/components/layout/HeaderSpacer";
 import Footer from "@/components/Footer";
-import AnnouncementBar from "@/components/AnnouncementBar";
 import MarqueeStrip from "@/components/MarqueeStrip";
 import TrustStrip from "@/components/TrustStrip";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -34,11 +34,11 @@ const CategoryPage = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <AnnouncementBar />
-      <Navbar />
+      <FixedSiteHeader />
+      <HeaderSpacer />
       
       {/* Category Header */}
-      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <nav className="flex items-center gap-2 mb-8 text-[10px] font-body tracking-[0.2em] uppercase text-muted-foreground">
             <Link to="/" className="hover:text-primary transition-colors">Home</Link>

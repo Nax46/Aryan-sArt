@@ -1,10 +1,5 @@
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
-import WishlistDrawer from "@/components/WishlistDrawer";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import AuthModal from "@/components/AuthModal";
+import { usePageTitle } from "@/components/layout/usePageTitle";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 const blogPosts = [
   {
@@ -46,11 +41,18 @@ const blogPosts = [
 ];
 
 const Blog = () => {
+  usePageTitle("Blog | OnCanvas");
+
   return (
-    <div className="min-h-screen bg-background">
-      <AnnouncementBar />
-      <Navbar />
-      
+    <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-10 sm:-mt-14 lg:-mt-16">
+      <div className="px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+        <Breadcrumbs
+          items={[
+            { label: "Home", path: "/" },
+            { label: "Blog" },
+          ]}
+        />
+      </div>
       <main className="pb-20">
         {/* Blog Hero Section */}
         <div className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden">
@@ -129,12 +131,6 @@ const Blog = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
-      <CartDrawer />
-      <WishlistDrawer />
-      <WhatsAppButton />
-      <AuthModal />
     </div>
   );
 };

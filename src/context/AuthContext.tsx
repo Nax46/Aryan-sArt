@@ -41,6 +41,8 @@ interface AuthContextType {
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
+  authModalTab: "login" | "signup";
+  openAuthModal: (tab?: "login" | "signup") => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -62,6 +64,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<"login" | "signup">("login");
+
+  const openAuthModal = useCallback((tab: "login" | "signup" = "login") => {
+    setAuthModalTab(tab);
+    setIsAuthModalOpen(true);
+  }, []);
 
   const API_URL = getApiUrl();
 
@@ -321,6 +329,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         changePassword,
         isAuthModalOpen,
         setIsAuthModalOpen,
+        authModalTab,
+        openAuthModal,
       }}
     >
       {children}

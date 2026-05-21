@@ -29,43 +29,6 @@ const WishlistDrawer = () => {
 
   if (!isOpen) return null;
 
-  if (!isAuthenticated) {
-    return (
-      <>
-        <div
-          className="fixed inset-0 bg-foreground/50 backdrop-blur-[2px] z-[60] cursor-pointer"
-          onClick={() => setIsOpen(false)}
-        />
-        <div className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-background z-[70] shadow-2xl animate-slide-in-right flex flex-col border-l border-border/40 p-6">
-          <div className="flex justify-end mb-4">
-            <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="flex flex-col items-center justify-center flex-1 text-center px-4">
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <LogIn className="w-8 h-8 text-primary" />
-            </div>
-            <p className="font-display text-lg text-foreground/80 mb-1">Login required</p>
-            <p className="font-body text-sm text-muted-foreground mb-6">
-              Please log in to save and view your wishlist
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setIsOpen(false);
-                setIsAuthModalOpen(true);
-              }}
-              className="px-6 py-2.5 bg-primary text-primary-foreground rounded-xl font-body text-sm font-medium"
-            >
-              Log In to Continue
-            </button>
-          </div>
-        </div>
-      </>
-    );
-  }
-
   const activeCollection = collections.find((c) => c._id === activeCollectionId) || collections[0];
   const items = activeCollection?.items || [];
 
@@ -82,7 +45,7 @@ const WishlistDrawer = () => {
 
   const handleMoveToCart = (item: (typeof items)[0]) => {
     addToCart({
-      id: Number(item.productId),
+      id: item.productId,
       name: item.name,
       price: item.price,
       image: item.image,

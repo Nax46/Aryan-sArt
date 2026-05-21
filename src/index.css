@@ -60,9 +60,21 @@
     @apply border-border;
   }
 
+  html {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-body;
     position: relative;
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  #root {
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   /* Noise texture overlay */
@@ -84,6 +96,89 @@
 }
 
 @layer components {
+  /* Premium navbar */
+  .nav-link-premium {
+    @apply relative inline-flex items-center;
+  }
+  .nav-link-premium::after {
+    content: "";
+    @apply absolute left-1/2 bottom-0 h-[2px] w-0 transition-all duration-300 ease-out;
+    background-color: #7e1e1e;
+    transform: translateX(-50%);
+  }
+  .nav-link-premium:hover::after {
+    @apply left-0 w-full;
+    transform: translateX(0);
+  }
+  header[class*="2a1810"] .nav-link-premium::after,
+  .bg-\[\#2a1810\] .nav-link-premium::after {
+    background-color: #e8d5c4;
+  }
+
+  .nav-icon-btn {
+    @apply relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full text-[#7E1E1E]/75 hover:text-[#7E1E1E] hover:bg-[#7E1E1E]/5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7E1E1E]/20;
+  }
+  .nav-icon-btn:active svg {
+    @apply scale-90;
+  }
+  .nav-icon-btn svg {
+    @apply transition-transform duration-300;
+  }
+  .nav-icon-btn:hover svg {
+    @apply scale-110;
+  }
+
+  .nav-icon-btn-scrolled {
+    @apply text-[#F9F7F5]/85 hover:text-[#FFFCFA] hover:bg-white/10;
+  }
+
+  .nav-link-premium-scrolled::after {
+    @apply bg-[#E8D5C4];
+  }
+
+  :root {
+    --site-header-height: 5.5rem;
+  }
+
+  .nav-badge {
+    @apply absolute -top-0.5 -right-0.5 text-[8px] font-bold min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center bg-primary text-primary-foreground leading-none;
+  }
+
+  /* Premium mega menu — dark walnut glass */
+  .mega-menu-panel {
+    border-radius: 1rem;
+    border: 1px solid rgba(232, 213, 196, 0.18);
+    background:
+      linear-gradient(
+        145deg,
+        rgba(42, 24, 16, 0.94) 0%,
+        rgba(62, 36, 24, 0.9) 45%,
+        rgba(74, 37, 17, 0.88) 100%
+      );
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    box-shadow:
+      0 4px 24px rgba(26, 14, 8, 0.25),
+      0 24px 64px rgba(26, 14, 8, 0.35),
+      inset 0 1px 0 rgba(255, 252, 250, 0.08);
+  }
+
+  .mega-menu-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px;
+    mix-blend-mode: overlay;
+  }
+
+  .mega-menu-panel {
+    position: relative;
+  }
+
   /* Auth modal: scrollbar only on form area, subtle theme tint */
   .auth-modal-form-scroll {
     scrollbar-width: thin;

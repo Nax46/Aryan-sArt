@@ -1,0 +1,144 @@
+/* Auto-generated — run: node scripts/generate-routes.mjs */
+import { lazy } from "react";
+
+const Page_home_featured_products = lazy(() => import("@/pages/Home/FeaturedProducts"));
+const Page_home_trending = lazy(() => import("@/pages/Home/Trending"));
+const Page_home_new_arrivals = lazy(() => import("@/pages/Home/NewArrivals"));
+const Page_home_best_sellers = lazy(() => import("@/pages/Home/BestSellers"));
+const Page_home_recommended = lazy(() => import("@/pages/Home/Recommended"));
+const Page_categories = lazy(() => import("@/pages/Categories"));
+const Page_categories_wooden_wall_art = lazy(() => import("@/pages/Categories/WoodenWallArt"));
+const Page_categories_wooden_wall_art_nature_design = lazy(() => import("@/pages/Categories/WoodenWallArt/NatureDesign"));
+const Page_categories_wooden_wall_art_abstract_design = lazy(() => import("@/pages/Categories/WoodenWallArt/AbstractDesign"));
+const Page_categories_wooden_wall_art_quotes_design = lazy(() => import("@/pages/Categories/WoodenWallArt/QuotesDesign"));
+const Page_categories_wooden_wall_art_religious_design = lazy(() => import("@/pages/Categories/WoodenWallArt/ReligiousDesign"));
+const Page_categories_wooden_wall_art_personalized_design = lazy(() => import("@/pages/Categories/WoodenWallArt/PersonalizedDesign"));
+const Page_categories_wooden_lamps = lazy(() => import("@/pages/Categories/WoodenLamps"));
+const Page_categories_wooden_lamps_table_lamps = lazy(() => import("@/pages/Categories/WoodenLamps/TableLamps"));
+const Page_categories_wooden_lamps_hanging_lamps = lazy(() => import("@/pages/Categories/WoodenLamps/HangingLamps"));
+const Page_categories_wooden_lamps_night_lamps = lazy(() => import("@/pages/Categories/WoodenLamps/NightLamps"));
+const Page_categories_wooden_lamps_led_lamps = lazy(() => import("@/pages/Categories/WoodenLamps/LedLamps"));
+const Page_categories_wooden_lamps_designer_lamps = lazy(() => import("@/pages/Categories/WoodenLamps/DesignerLamps"));
+const Page_categories_home_decor = lazy(() => import("@/pages/Categories/HomeDecor"));
+const Page_categories_home_decor_wall_decor = lazy(() => import("@/pages/Categories/HomeDecor/WallDecor"));
+const Page_categories_home_decor_shelves = lazy(() => import("@/pages/Categories/HomeDecor/Shelves"));
+const Page_categories_home_decor_decorative_pieces = lazy(() => import("@/pages/Categories/HomeDecor/DecorativePieces"));
+const Page_categories_home_decor_mirrors = lazy(() => import("@/pages/Categories/HomeDecor/Mirrors"));
+const Page_categories_home_decor_frames = lazy(() => import("@/pages/Categories/HomeDecor/Frames"));
+const Page_categories_office_decor = lazy(() => import("@/pages/Categories/OfficeDecor"));
+const Page_categories_office_decor_desk_organizer = lazy(() => import("@/pages/Categories/OfficeDecor/DeskOrganizer"));
+const Page_categories_office_decor_name_plates = lazy(() => import("@/pages/Categories/OfficeDecor/NamePlates"));
+const Page_categories_office_decor_office_wall_art = lazy(() => import("@/pages/Categories/OfficeDecor/OfficeWallArt"));
+const Page_categories_office_decor_pen_stands = lazy(() => import("@/pages/Categories/OfficeDecor/PenStands"));
+const Page_categories_office_decor_clock_designs = lazy(() => import("@/pages/Categories/OfficeDecor/ClockDesigns"));
+const Page_categories_wooden_clocks = lazy(() => import("@/pages/Categories/WoodenClocks"));
+const Page_categories_wooden_clocks_modern = lazy(() => import("@/pages/Categories/WoodenClocks/Modern"));
+const Page_categories_wooden_clocks_vintage = lazy(() => import("@/pages/Categories/WoodenClocks/Vintage"));
+const Page_categories_wooden_clocks_minimal = lazy(() => import("@/pages/Categories/WoodenClocks/Minimal"));
+const Page_categories_wooden_clocks_custom = lazy(() => import("@/pages/Categories/WoodenClocks/Custom"));
+const Page_categories_personalized_gifts = lazy(() => import("@/pages/Categories/PersonalizedGifts"));
+const Page_categories_personalized_gifts_name_art = lazy(() => import("@/pages/Categories/PersonalizedGifts/NameArt"));
+const Page_categories_personalized_gifts_photo_frame = lazy(() => import("@/pages/Categories/PersonalizedGifts/PhotoFrame"));
+const Page_categories_personalized_gifts_couple_gifts = lazy(() => import("@/pages/Categories/PersonalizedGifts/CoupleGifts"));
+const Page_categories_personalized_gifts_birthday_gifts = lazy(() => import("@/pages/Categories/PersonalizedGifts/BirthdayGifts"));
+const Page_categories_personalized_gifts_corporate_gifts = lazy(() => import("@/pages/Categories/PersonalizedGifts/CorporateGifts"));
+const Page_collections = lazy(() => import("@/pages/Collections"));
+const Page_collections_trending = lazy(() => import("@/pages/Collections/Trending"));
+const Page_collections_premium = lazy(() => import("@/pages/Collections/Premium"));
+const Page_collections_festival = lazy(() => import("@/pages/Collections/Festival"));
+const Page_collections_minimal = lazy(() => import("@/pages/Collections/Minimal"));
+const Page_collections_luxury = lazy(() => import("@/pages/Collections/Luxury"));
+const Page_collections_best_selling = lazy(() => import("@/pages/Collections/BestSelling"));
+const Page_rooms = lazy(() => import("@/pages/Rooms"));
+const Page_rooms_living_room = lazy(() => import("@/pages/Rooms/LivingRoom"));
+const Page_rooms_bedroom = lazy(() => import("@/pages/Rooms/Bedroom"));
+const Page_rooms_office = lazy(() => import("@/pages/Rooms/Office"));
+const Page_rooms_kitchen = lazy(() => import("@/pages/Rooms/Kitchen"));
+const Page_rooms_study_room = lazy(() => import("@/pages/Rooms/StudyRoom"));
+const Page_rooms_workspace = lazy(() => import("@/pages/Rooms/Workspace"));
+const Page_custom_design = lazy(() => import("@/pages/CustomDesign"));
+const Page_custom_design_upload_custom_design = lazy(() => import("@/pages/CustomDesign/UploadCustomDesign"));
+const Page_custom_design_personalized_wooden_art = lazy(() => import("@/pages/CustomDesign/PersonalizedWoodenArt"));
+const Page_custom_design_photo_to_wooden_frame = lazy(() => import("@/pages/CustomDesign/PhotoToWoodenFrame"));
+const Page_custom_design_custom_name_board = lazy(() => import("@/pages/CustomDesign/CustomNameBoard"));
+const Page_custom_design_custom_lamp_design = lazy(() => import("@/pages/CustomDesign/CustomLampDesign"));
+const Page_contact = lazy(() => import("@/pages/Contact"));
+const Page_contact_contact_us = lazy(() => import("@/pages/Contact/ContactUs"));
+const Page_contact_support = lazy(() => import("@/pages/Contact/Support"));
+const Page_contact_faq = lazy(() => import("@/pages/Contact/Faq"));
+const Page_contact_feedback = lazy(() => import("@/pages/Contact/Feedback"));
+const Page_wishlist = lazy(() => import("@/pages/Wishlist"));
+const Page_cart = lazy(() => import("@/pages/Cart"));
+const Page_profile = lazy(() => import("@/pages/Profile"));
+
+export const PLACEHOLDER_ROUTES = [
+  { path: "/home/featured-products", Component: Page_home_featured_products },
+  { path: "/home/trending", Component: Page_home_trending },
+  { path: "/home/new-arrivals", Component: Page_home_new_arrivals },
+  { path: "/home/best-sellers", Component: Page_home_best_sellers },
+  { path: "/home/recommended", Component: Page_home_recommended },
+  { path: "/categories", Component: Page_categories },
+  { path: "/categories/wooden-wall-art", Component: Page_categories_wooden_wall_art },
+  { path: "/categories/wooden-wall-art/nature-design", Component: Page_categories_wooden_wall_art_nature_design },
+  { path: "/categories/wooden-wall-art/abstract-design", Component: Page_categories_wooden_wall_art_abstract_design },
+  { path: "/categories/wooden-wall-art/quotes-design", Component: Page_categories_wooden_wall_art_quotes_design },
+  { path: "/categories/wooden-wall-art/religious-design", Component: Page_categories_wooden_wall_art_religious_design },
+  { path: "/categories/wooden-wall-art/personalized-design", Component: Page_categories_wooden_wall_art_personalized_design },
+  { path: "/categories/wooden-lamps", Component: Page_categories_wooden_lamps },
+  { path: "/categories/wooden-lamps/table-lamps", Component: Page_categories_wooden_lamps_table_lamps },
+  { path: "/categories/wooden-lamps/hanging-lamps", Component: Page_categories_wooden_lamps_hanging_lamps },
+  { path: "/categories/wooden-lamps/night-lamps", Component: Page_categories_wooden_lamps_night_lamps },
+  { path: "/categories/wooden-lamps/led-lamps", Component: Page_categories_wooden_lamps_led_lamps },
+  { path: "/categories/wooden-lamps/designer-lamps", Component: Page_categories_wooden_lamps_designer_lamps },
+  { path: "/categories/home-decor", Component: Page_categories_home_decor },
+  { path: "/categories/home-decor/wall-decor", Component: Page_categories_home_decor_wall_decor },
+  { path: "/categories/home-decor/shelves", Component: Page_categories_home_decor_shelves },
+  { path: "/categories/home-decor/decorative-pieces", Component: Page_categories_home_decor_decorative_pieces },
+  { path: "/categories/home-decor/mirrors", Component: Page_categories_home_decor_mirrors },
+  { path: "/categories/home-decor/frames", Component: Page_categories_home_decor_frames },
+  { path: "/categories/office-decor", Component: Page_categories_office_decor },
+  { path: "/categories/office-decor/desk-organizer", Component: Page_categories_office_decor_desk_organizer },
+  { path: "/categories/office-decor/name-plates", Component: Page_categories_office_decor_name_plates },
+  { path: "/categories/office-decor/office-wall-art", Component: Page_categories_office_decor_office_wall_art },
+  { path: "/categories/office-decor/pen-stands", Component: Page_categories_office_decor_pen_stands },
+  { path: "/categories/office-decor/clock-designs", Component: Page_categories_office_decor_clock_designs },
+  { path: "/categories/wooden-clocks", Component: Page_categories_wooden_clocks },
+  { path: "/categories/wooden-clocks/modern", Component: Page_categories_wooden_clocks_modern },
+  { path: "/categories/wooden-clocks/vintage", Component: Page_categories_wooden_clocks_vintage },
+  { path: "/categories/wooden-clocks/minimal", Component: Page_categories_wooden_clocks_minimal },
+  { path: "/categories/wooden-clocks/custom", Component: Page_categories_wooden_clocks_custom },
+  { path: "/categories/personalized-gifts", Component: Page_categories_personalized_gifts },
+  { path: "/categories/personalized-gifts/name-art", Component: Page_categories_personalized_gifts_name_art },
+  { path: "/categories/personalized-gifts/photo-frame", Component: Page_categories_personalized_gifts_photo_frame },
+  { path: "/categories/personalized-gifts/couple-gifts", Component: Page_categories_personalized_gifts_couple_gifts },
+  { path: "/categories/personalized-gifts/birthday-gifts", Component: Page_categories_personalized_gifts_birthday_gifts },
+  { path: "/categories/personalized-gifts/corporate-gifts", Component: Page_categories_personalized_gifts_corporate_gifts },
+  { path: "/collections", Component: Page_collections },
+  { path: "/collections/trending", Component: Page_collections_trending },
+  { path: "/collections/premium", Component: Page_collections_premium },
+  { path: "/collections/festival", Component: Page_collections_festival },
+  { path: "/collections/minimal", Component: Page_collections_minimal },
+  { path: "/collections/luxury", Component: Page_collections_luxury },
+  { path: "/collections/best-selling", Component: Page_collections_best_selling },
+  { path: "/rooms", Component: Page_rooms },
+  { path: "/rooms/living-room", Component: Page_rooms_living_room },
+  { path: "/rooms/bedroom", Component: Page_rooms_bedroom },
+  { path: "/rooms/office", Component: Page_rooms_office },
+  { path: "/rooms/kitchen", Component: Page_rooms_kitchen },
+  { path: "/rooms/study-room", Component: Page_rooms_study_room },
+  { path: "/rooms/workspace", Component: Page_rooms_workspace },
+  { path: "/custom-design", Component: Page_custom_design },
+  { path: "/custom-design/upload-custom-design", Component: Page_custom_design_upload_custom_design },
+  { path: "/custom-design/personalized-wooden-art", Component: Page_custom_design_personalized_wooden_art },
+  { path: "/custom-design/photo-to-wooden-frame", Component: Page_custom_design_photo_to_wooden_frame },
+  { path: "/custom-design/custom-name-board", Component: Page_custom_design_custom_name_board },
+  { path: "/custom-design/custom-lamp-design", Component: Page_custom_design_custom_lamp_design },
+  { path: "/contact", Component: Page_contact },
+  { path: "/contact/contact-us", Component: Page_contact_contact_us },
+  { path: "/contact/support", Component: Page_contact_support },
+  { path: "/contact/faq", Component: Page_contact_faq },
+  { path: "/contact/feedback", Component: Page_contact_feedback },
+  { path: "/wishlist", Component: Page_wishlist },
+  { path: "/cart", Component: Page_cart },
+  { path: "/profile", Component: Page_profile },
+] as const;

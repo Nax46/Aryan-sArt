@@ -42,7 +42,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       return;
     }
     addToCart({
-      id: product.id,
+      id: String(product.id),
       name: product.name,
       price: product.price,
       image: product.image,
@@ -57,7 +57,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       return;
     }
     addToCart({
-      id: product.id,
+      id: String(product.id),
       name: product.name,
       price: product.price,
       image: product.image,

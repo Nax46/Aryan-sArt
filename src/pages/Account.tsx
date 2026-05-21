@@ -20,9 +20,9 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import FixedSiteHeader from "@/components/layout/FixedSiteHeader";
+import HeaderSpacer from "@/components/layout/HeaderSpacer";
 import Footer from "@/components/Footer";
-import AnnouncementBar from "@/components/AnnouncementBar";
 import AuthModal from "@/components/AuthModal";
 import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
@@ -274,13 +274,13 @@ const AccountPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AnnouncementBar />
-      <Navbar />
+      <FixedSiteHeader />
+      <HeaderSpacer />
       <AuthModal />
       <CartDrawer />
       <WishlistDrawer />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-28">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         <div className="mb-8">
           <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-body mb-2">My Account</p>
           <h1 className="font-display text-3xl md:text-4xl font-light text-foreground">Account Settings</h1>

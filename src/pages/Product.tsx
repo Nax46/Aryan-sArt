@@ -14,6 +14,7 @@ import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
 import WishlistHeart from "@/components/WishlistHeart";
 import AuthModal from "@/components/AuthModal";
+import ProductRecommendations from "@/components/ProductRecommendations";
 import { toast } from "sonner";
 
 const ProductPage = () => {
@@ -151,6 +152,8 @@ const ProductPage = () => {
 
           </div>
         </div>
+
+        <ProductRecommendations currentProductId={product.id} />
       </main>
 
       <MarqueeStrip />

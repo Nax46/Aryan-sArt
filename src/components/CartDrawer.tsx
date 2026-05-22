@@ -2,7 +2,9 @@ import { X, Minus, Plus, ShoppingBag, Truck, CreditCard, Tag, Sparkles, LogIn } 
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { useDrawerLayer } from "@/hooks/useDrawerLayer";
 import { getApiUrl, authFetch } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -177,23 +179,28 @@ const CartDrawer = () => {
     }
   }, [isAuthenticated]);
 
+  const closeDrawer = useCallback(() => {
+    setIsOpen(false);
+    setShowPaymentModal(false);
+  }, [setIsOpen]);
+
+  useDrawerLayer(isOpen, closeDrawer);
+
   if (!isOpen) return null;
 
   const deliveryEstimate = total >= 999 ? "Free delivery" : "₹99 delivery";
   const savings = Math.round(total * 0.1);
   const showLoginGate = !isAuthenticated;
 
-  return (
-    <>
+  return createPortal(
+    <div className="fixed inset-0 z-[10000]" role="dialog" aria-modal="true" aria-label="Shopping cart">
       <div
-        className="fixed inset-0 bg-foreground/50 backdrop-blur-[2px] z-[60] cursor-pointer animate-in fade-in duration-200"
-        onClick={() => {
-          setIsOpen(false);
-          setShowPaymentModal(false);
-        }}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-pointer animate-in fade-in duration-200"
+        onClick={closeDrawer}
+        aria-hidden="true"
       />
 
-      <div className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-background z-[70] shadow-2xl animate-slide-in-right flex flex-col border-l border-border/40">
+      <div className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-background shadow-2xl animate-slide-in-right flex flex-col border-l border-border/40 pointer-events-auto">
         {/* Header */}
         <div className="relative px-6 pt-6 pb-4 border-b border-border/50 bg-gradient-to-b from-primary/[0.03] to-transparent">
           <div className="flex items-center justify-between">
@@ -209,8 +216,10 @@ const CartDrawer = () => {
               </div>
             </div>
             <button
-              onClick={() => setIsOpen(false)}
-              className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              type="button"
+              onClick={closeDrawer}
+              className="relative z-10 p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              aria-label="Close cart"
             >
               <X className="w-5 h-5" />
             </button>
@@ -419,7 +428,8 @@ const CartDrawer = () => {
           </div>
         )}
       </div>
-    </>
+    </div>,
+    document.body,
   );
 };
 

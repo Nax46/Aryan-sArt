@@ -38,7 +38,7 @@ const ProfileDropdown = ({ className, scrolled }: ProfileDropdownProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="w-52 font-body bg-white/95 backdrop-blur-md border-[#7E1E1E]/10 rounded-xl p-1.5 shadow-[0_12px_40px_rgba(62,24,24,0.12)]"
+          className="z-[10001] w-52 font-body bg-white/95 backdrop-blur-md border-[#7E1E1E]/10 rounded-xl p-1.5 shadow-[0_12px_40px_rgba(62,24,24,0.12)]"
         >
           <DropdownMenuLabel className="font-display text-[#7E1E1E] px-2 py-1.5">
             Welcome
@@ -80,7 +80,7 @@ const ProfileDropdown = ({ className, scrolled }: ProfileDropdownProps) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-56 font-body bg-white/95 backdrop-blur-md border-[#7E1E1E]/10 rounded-xl p-1.5 shadow-[0_12px_40px_rgba(62,24,24,0.12)]"
+        className="z-[10001] w-56 font-body bg-white/95 backdrop-blur-md border-[#7E1E1E]/10 rounded-xl p-1.5 shadow-[0_12px_40px_rgba(62,24,24,0.12)]"
       >
         <DropdownMenuLabel className="font-display font-semibold text-[#7E1E1E] px-2 py-1.5">
           My Account
